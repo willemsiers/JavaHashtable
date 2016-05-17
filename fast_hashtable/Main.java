@@ -1,9 +1,9 @@
-package fast_set_java;
+package fast_hashtable;
 
 import java.util.Arrays;
 
-import fast_set_java.FastSet.Bucket;
-import fast_set_java.FastSet.Vector;
+import fast_hashtable.FastSet.Bucket;
+import fast_hashtable.FastSet.Vector;
 
 public class Main {
 

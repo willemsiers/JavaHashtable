@@ -1,4 +1,4 @@
-package fast_set_java;
+package fast_hashtable;
 
 import java.util.concurrent.atomic.AtomicInteger;
 public class FastSet {
