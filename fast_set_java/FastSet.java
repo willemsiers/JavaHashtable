@@ -3,7 +3,7 @@ package fast_set_java;
 import java.util.concurrent.atomic.AtomicInteger;
 public class FastSet {
 
-	final int LOG_LEVEL = 2;
+	final int LOG_LEVEL = 1;
 	
 	final int LOG_VERBOSE = 2;
 	final int LOG_ERROR = 1;
@@ -24,7 +24,7 @@ public class FastSet {
 			}
 	}
 
-	public Bucket[] 	buckets = null;
+	public Bucket[]	buckets = null;
 	public Vector[] data = null;
 	int key_length = 0;
 	int data_length = 0;
@@ -41,6 +41,13 @@ public class FastSet {
 		public String toString()
 		{
 			return value;
+		}
+		
+		@Override
+		public int hashCode()
+		{
+			//note: Object.hashCode is non-deterministic (based on memory address), String.hashCode is.
+			return Math.abs(value.hashCode());
 		}
 	}
 	
@@ -107,7 +114,7 @@ public class FastSet {
 	}
 	
 	//fset_t * fset_create (size_t key_length, size_t data_length, size_t init_size, size_t max_size)
-	public FastSet(int key_length, int data_length, int init_size, int max_size)
+	public FastSet(int key_length, int data_length, int init_size)
 	{
 		this.buckets = new Bucket[init_size];
 		this.data = new Vector[init_size];
@@ -128,27 +135,31 @@ public class FastSet {
 
 	}
 	
-	int hash(Vector v, int count)
-	{
-		double result = v.hashCode();
-		for(int i = 1; i<count; i++)
+    /**Based on s[0]*31^(n-1) + s[1]*31^(n-2) + ... + s[n-1]**/
+    public int stringHash(String s, int iteration) 
+    {
+    	//TODO: better hash function
+        int hash = 0;
+        int prime = Primes.primes[iteration + 10];
+        int length = s.length();
+        char[] chars = s.toCharArray();
+		for (int i = 0; i < length; i++) 
 		{
-			if (result <= 1) {
-				throw new NullPointerException("Vector hash <=1");
-			}
-			result = Math.pow(result, 2);
+			long h = (long) (chars[i] * Math.pow((double)prime , (double) length-1));
+			hash += (int) h;
 		}
-		return (int)result;// & (key_length * 32);
-	}
+        return hash;
+    }
+
 	
 	boolean
 	find_or_put(Vector v, boolean insertAbsent)
 	{
 		int count = 1;
-		int h = hash(v, count);
+		int h = Math.abs(stringHash(v.value, count));
 		//logV("Putting: "+h);
 		int lineStart = h % size;
-		final int THRESHOLD = 4;
+		final int THRESHOLD = 100;
 		final int CACHE_LINE_SIZE = 4;
 		
 		boolean found = false;
@@ -173,7 +184,8 @@ public class FastSet {
 						logV("waiting...");
 						//wait...
                    	}
-					if (data[position].equals(v)) {
+					if (data[position].equals(v)) 
+		{
 						logV("equal data found");
 						return true;
 					}else
@@ -186,7 +198,7 @@ public class FastSet {
 
 			count++;
 			logV("rehashing");
-			lineStart = hash(v, count) % size;
+			lineStart = Math.abs(stringHash(v.value, count) % size);
 		}
 		
 		logE(String.format("Unable to insert \"%s\" (Threshold exceeded)", v.toString()));
