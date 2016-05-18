@@ -1,6 +1,10 @@
 package fast_hashtable;
 
 import java.util.Arrays;
+import java.util.concurrent.BrokenBarrierException;
+import java.util.concurrent.CyclicBarrier;
+import java.util.concurrent.TimeUnit;
+import java.util.concurrent.TimeoutException;
 
 import fast_hashtable.FastSet.Bucket;
 import fast_hashtable.FastSet.Vector;
@@ -9,22 +13,22 @@ public class Main {
 
 	public static void main(String[] args)
 	{
-        final int STATESPACE_SIZE = 256;
+        final int STATESPACE_SIZE = 8 * 1024;
 		FastSet s = new FastSet(1, 1, STATESPACE_SIZE);
 		Vector[] statespace = new Vector[STATESPACE_SIZE];
 		for (int i = 0; i < STATESPACE_SIZE; i++) 
 		{
 			statespace[i] = s.new Vector();
-			statespace[i].value = "willem" + i;
+			statespace[i].value = "" + i;
 		}
 
-		final int NUM_OF_THREADS = 4; //powers of 2
+		final int NUM_OF_THREADS = 2; //powers of 2
+		CyclicBarrier barrier = new CyclicBarrier(NUM_OF_THREADS + 1);
 		Thread[] threads = new Thread[NUM_OF_THREADS];
 
 		int workLeft = STATESPACE_SIZE;
 		for (int threadNo = 0; threadNo < NUM_OF_THREADS; threadNo++) 
 		{
-			
 			class Work implements Runnable {
 
 				public Vector[] unprocessed = null;
@@ -39,10 +43,15 @@ public class Main {
 				@Override
 				public void run()
 				{
-					//System.out.println("starting thread-"+Thread.currentThread().getName());
+					try {
+						barrier.await(10, TimeUnit.SECONDS);
+					} catch (InterruptedException | BrokenBarrierException | TimeoutException e) {
+						e.printStackTrace();
+					}
+					System.out.println("starting thread-"+Thread.currentThread().getName());
 
 					for (int i = 0; i < workSize; i++) 
-		{
+					{
 						boolean found = s.find_or_put(unprocessed[i], true); // if false, data is put
 						//System.out.println("found:" + found + " for " + unprocessed[i].toString());
 					}
@@ -68,6 +77,14 @@ public class Main {
 		{
 			worker.start();
 		}
+		
+		try {
+			barrier.await(10, TimeUnit.SECONDS);
+		} catch (InterruptedException | BrokenBarrierException | TimeoutException e1) {
+			e1.printStackTrace();
+		}
+		
+		long startMs = System.currentTimeMillis();
 
 		for (Thread thread : threads) 
 		{
@@ -78,19 +95,24 @@ public class Main {
 			}
 		}
 		
+		long endMs = System.currentTimeMillis();
+		long diffMs = endMs - startMs;
+		double diffSeconds = diffMs / 1000f;
+		
 		for (Bucket b : s.buckets) 
 		{
 			//System.out.println("bucket:\t" + b);
 		}
+		int insertedCounter = 0;
 		for (int i = 0; i<s.data.length; i++) 
 		{
+			if(s.data[i] != null)
+			{
+				insertedCounter ++ ;
+			}
 			//System.out.println("data "+i+":\t" + s.data[i]);
 		}
-		
-		
-//		long a = Long.MAX_VALUE;
-//		System.out.println((int)a);
-        
-        
+
+		System.out.printf("Inserting %d vectors took %.4f seconds on %d threads. %d/%d data[] places were filled.", STATESPACE_SIZE, diffSeconds, NUM_OF_THREADS, insertedCounter, s.data.length);
 	}
 }

@@ -1,0 +1,16 @@
+May 18 2016 - 11:48 (Laptop, Intel i5-3210M)
+Data per vector: "willem"+number
+Inserting 4096 vectors took 58.1880 seconds. 1733/4096 data[] places were filled.
+Inserting 4096 vectors took 57.7430 seconds on 1 threads. 1733/4096 data[] places were filled.
+Inserting 4096 vectors took 41.9500 seconds on 2 threads. 1787/4096 data[] places were filled.
+Inserting 4096 vectors took 44.0890 seconds on 2 threads. 1792/4096 data[] places were filled.
+Inserting 4096 vectors took 34.8230 seconds on 4 threads. 1813/4096 data[] places were filled.
+Inserting 4096 vectors took 37.7540 seconds on 4 threads. 1808/4096 data[] places were filled.
+Inserting 4096 vectors took 35.5270 seconds on 8 threads. 1816/4096 data[] places were filled.
+4Inserting 4096 vectors took 34.6540 seconds on 8 threads. 1815/4096 data[] places were filled.
+
+Data per vector: ""+number
+Inserting 8192 vectors took 18.8360 seconds on 1 threads. 8164/8192 data[] places were filled.
+Inserting 8192 vectors took 14.0560 seconds on 2 threads. 8163/8192 data[] places were filled.
+oInserting 8192 vectors took 14.5860 seconds on 4 threads. 8163/8192 data[] places were filled.
+Inserting 8192 vectors took 11.5360 seconds on 8 threads. 8161/8192 data[] places were filled.

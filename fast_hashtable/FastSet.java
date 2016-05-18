@@ -3,7 +3,7 @@ package fast_hashtable;
 import java.util.concurrent.atomic.AtomicInteger;
 public class FastSet {
 
-	final int LOG_LEVEL = 1;
+	final int LOG_LEVEL = 0;
 	
 	final int LOG_VERBOSE = 2;
 	final int LOG_ERROR = 1;
@@ -159,7 +159,7 @@ public class FastSet {
 		int h = Math.abs(stringHash(v.value, count));
 		//logV("Putting: "+h);
 		int lineStart = h % size;
-		final int THRESHOLD = 100;
+		final int THRESHOLD = 1000;
 		final int CACHE_LINE_SIZE = 4;
 		
 		boolean found = false;
