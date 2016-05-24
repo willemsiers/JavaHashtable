@@ -9,12 +9,15 @@ import java.util.concurrent.TimeoutException;
 import fast_hashtable.FastSet.Bucket;
 import fast_hashtable.FastSet.Vector;
 
+import static other.Logger.logV;
+
 public class Main {
 
 	public static void main(String[] args)
 	{
         final int STATESPACE_SIZE = 8 * 1024;
-		FastSet s = new FastSet(1, 1, STATESPACE_SIZE);
+        final int FREE_FACTOR = 8;
+		FastSet s = new FastSet(1, 1, STATESPACE_SIZE * FREE_FACTOR);
 		Vector[] statespace = new Vector[STATESPACE_SIZE];
 		for (int i = 0; i < STATESPACE_SIZE; i++) 
 		{
@@ -25,7 +28,6 @@ public class Main {
 		final int NUM_OF_THREADS = 2; //powers of 2
 		CyclicBarrier barrier = new CyclicBarrier(NUM_OF_THREADS + 1);
 		Thread[] threads = new Thread[NUM_OF_THREADS];
-
 		int workLeft = STATESPACE_SIZE;
 		for (int threadNo = 0; threadNo < NUM_OF_THREADS; threadNo++) 
 		{
@@ -48,12 +50,12 @@ public class Main {
 					} catch (InterruptedException | BrokenBarrierException | TimeoutException e) {
 						e.printStackTrace();
 					}
-					System.out.println("starting thread-"+Thread.currentThread().getName());
+					logV("starting thread-"+Thread.currentThread().getName());
 
 					for (int i = 0; i < workSize; i++) 
 					{
 						boolean found = s.find_or_put(unprocessed[i], true); // if false, data is put
-						//System.out.println("found:" + found + " for " + unprocessed[i].toString());
+						logV("found:" + found + " for " + unprocessed[i].toString());
 					}
 				}
 				
@@ -101,7 +103,7 @@ public class Main {
 		
 		for (Bucket b : s.buckets) 
 		{
-			//System.out.println("bucket:\t" + b);
+			logV("bucket:\t" + b);
 		}
 		int insertedCounter = 0;
 		for (int i = 0; i<s.data.length; i++) 
@@ -110,7 +112,7 @@ public class Main {
 			{
 				insertedCounter ++ ;
 			}
-			//System.out.println("data "+i+":\t" + s.data[i]);
+			logV("data "+i+":\t" + s.data[i]);
 		}
 
 		System.out.printf("Inserting %d vectors took %.4f seconds on %d threads. %d/%d data[] places were filled.", STATESPACE_SIZE, diffSeconds, NUM_OF_THREADS, insertedCounter, s.data.length);

@@ -1,29 +1,12 @@
 package fast_hashtable;
 
 import java.util.concurrent.atomic.AtomicInteger;
+
+import static other.Logger.*;
+
 public class FastSet {
 
-	final int LOG_LEVEL = 0;
 	
-	final int LOG_VERBOSE = 2;
-	final int LOG_ERROR = 1;
-
-	public void logV(String msg)
-	{
-			if(LOG_LEVEL >= LOG_VERBOSE)
-			{
-				System.out.println(msg);
-			}
-	}
-	
-	public void logE(String msg)
-	{
-			if(LOG_LEVEL >= LOG_ERROR)
-			{
-				System.out.println(msg);
-			}
-	}
-
 	public Bucket[]	buckets = null;
 	public Vector[] data = null;
 	int key_length = 0;
@@ -128,7 +111,7 @@ public class FastSet {
 			buckets[i] = new Bucket();
 		}
 
-		
+
 		//todo
 		// dbs->data = RTalign (CACHE_LINE_SIZE, dbs->total_length * dbs->size_max);
 		// dbs->todo_data = RTalign (CACHE_LINE_SIZE, dbs->total_length * dbs->size_max);
