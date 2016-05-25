@@ -6,7 +6,6 @@ import java.util.concurrent.CyclicBarrier;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
 
-import fast_hashtable.FastSet.Bucket;
 import fast_hashtable.FastSet.Vector;
 
 import static other.Logger.logV;
@@ -15,9 +14,13 @@ public class Main {
 
 	public static void main(String[] args)
 	{
-        final int STATESPACE_SIZE = 8 * 1024;
-        final int FREE_FACTOR = 8;
-		FastSet s = new FastSet(1, 1, STATESPACE_SIZE * FREE_FACTOR);
+//		long mask = 1l << (8*8-1);
+//		long a = 4;
+//		long b = a | mask;
+
+        final int STATESPACE_SIZE = 64 * 1024;
+        final int FREE_FACTOR = 4;
+		FastSet s = new FastSet(1, STATESPACE_SIZE * FREE_FACTOR);
 		Vector[] statespace = new Vector[STATESPACE_SIZE];
 		for (int i = 0; i < STATESPACE_SIZE; i++) 
 		{
@@ -25,7 +28,7 @@ public class Main {
 			statespace[i].value = "" + i;
 		}
 
-		final int NUM_OF_THREADS = 2; //powers of 2
+		final int NUM_OF_THREADS = 4; //powers of 2
 		CyclicBarrier barrier = new CyclicBarrier(NUM_OF_THREADS + 1);
 		Thread[] threads = new Thread[NUM_OF_THREADS];
 		int workLeft = STATESPACE_SIZE;
@@ -100,20 +103,18 @@ public class Main {
 		long endMs = System.currentTimeMillis();
 		long diffMs = endMs - startMs;
 		double diffSeconds = diffMs / 1000f;
-		
-		for (Bucket b : s.buckets) 
-		{
-			logV("bucket:\t" + b);
-		}
+
 		int insertedCounter = 0;
 		for (int i = 0; i<s.data.length; i++) 
 		{
-			if(s.data[i] != null)
+			if(s.data[i].value != null)
 			{
 				insertedCounter ++ ;
 			}
 			logV("data "+i+":\t" + s.data[i]);
 		}
+
+		s.cleanup();
 
 		System.out.printf("Inserting %d vectors took %.4f seconds on %d threads. %d/%d data[] places were filled.", STATESPACE_SIZE, diffSeconds, NUM_OF_THREADS, insertedCounter, s.data.length);
 	}

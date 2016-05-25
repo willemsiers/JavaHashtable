@@ -1,26 +1,28 @@
 package fast_hashtable;
 
+import sun.misc.Unsafe;
+
 import static other.Logger.*;
 
+import java.lang.reflect.Field;
 import java.nio.ByteBuffer;
+import java.util.Arrays;
 import java.util.concurrent.atomic.AtomicInteger;
 
 public class FastSet {
 
-	final int LONG_SIZE_BYTES = 8;
-	final long LONG_MASK_OCCUPIED = 1l << (LONG_SIZE_BYTES - 1);
-	final long LONG_MASK_WRITING = 1l << (LONG_SIZE_BYTES - 2);
+    private static final long LONG_KEYVALUE_EMPTY = 0;
+    final int LONG_SIZE_BYTES = 8;
+	final long LONG_MASK_OCCUPIED = 1l << (LONG_SIZE_BYTES*8 - 1);
+	final long LONG_MASK_WRITING = 1l << (LONG_SIZE_BYTES*8 - 2);
 	final int KEY_SIZE_BYTES = LONG_SIZE_BYTES;
+	public final Unsafe unsafe;
 
-	public Bucket[] buckets = null;
-	public Vector[] data = null;
-	public ByteBuffer indices;
-	int key_length = 0;
-	int data_length = 0;
-	int total_length = 0;
+	public final long indicesBase;
+	public final Vector[] data;
 	int size = 0;
 
-	/**
+    /**
 	 * Vector = State data
 	 */
 	public class Vector {
@@ -28,99 +30,81 @@ public class FastSet {
 
 		@Override
 		public String toString()
-		{
-			return value;
+        {
+            return value;
 		}
 
 		@Override
 		public int hashCode()
 		{
 			// note: Object.hashCode is non-deterministic (based on memory address), String.hashCode is.
-			return Math.abs(value.hashCode());
-		}
-	}
-
-	public class Bucket {
-		// value of a Bucket is the data's hash
-
-		private static final int VALUE_EMPTY = 0;
-		// todo: look into atomicreference classes
-		public AtomicInteger value = new AtomicInteger(VALUE_EMPTY);
-		// public State state = State.Empty;
-		// int vInt = Integer.parseUnsignedInt("4294967295");
-		private int mask_writing = 1 << 31;
-
-		public boolean isEmpty()
-		{
-			return value.get() == VALUE_EMPTY;
+            if (value == null) {
+                return 0;
+            }
+            return Math.abs(value.hashCode());
 		}
 
-		public boolean isWriting()
-		{
-			boolean writeFlag = (value.get() >> 31) == 1;
-			return writeFlag;
-		}
+        @Override
+        public boolean equals(Object o) {
+            boolean result = false;
 
-		public boolean setWritingCAS(int hash)
-		{
-			boolean success = false;
-			// <h,WRITE>
-			int newValue = hash | mask_writing;
-			success = this.value.compareAndSet(VALUE_EMPTY, newValue);
-			return success;
-		}
+            if( value != null){
+                if (o instanceof String) {
+                    String s = (String) o;
+                    result = value.equals(s);
+                }
+            }
 
-		public void setDone(int hash)
-		{
-			int newValue = hash & (~mask_writing);
-			value.set(newValue);
-		}
+            return result;
+        }
+    }
 
-		@Override
-		public String toString()
-		{
-			int value = this.value.get();
-			String result = "bckt_"
-					+ (value == VALUE_EMPTY ? "empty" : String.format("%d (%d)", getNumerical(), getNumerical() % size));
-			return result;
-		}
-
-		int getNumerical()
-		{
-			return (value.get() & (~mask_writing));
-		}
-
-		@Override
-		public boolean equals(Object obj)
-		{
-			if (obj instanceof Bucket) {
-				return ((Bucket) obj).value.get() == this.value.get();
-			}
-			else {
-				return false;
-			}
-		}
-	}
+//		public String Bucket.toString()
+//		{
+//			int value = this.value.get();
+//			String result = "bckt_"
+//					+ (value == VALUE_EMPTY ? "empty" : String.format("%d (%d)", getNumerical(), getNumerical() % size));
+//			return result;
+//		}
 
 	// fset_t * fset_create (size_t key_length, size_t data_length, size_t init_size, size_t max_size)
-	public FastSet(int key_length, int data_length, int init_size) {
-		this.buckets = new Bucket[init_size];
-		this.data = new Vector[init_size];
+	public FastSet(int key_length, int init_size) {
+        this.data = new Vector[init_size];
 		this.size = init_size;
-		this.key_length = key_length;
-		this.data_length = data_length;
-		this.total_length = key_length + data_length;
-
-		for (int i = 0; i < this.size; i++) {
-			buckets[i] = new Bucket();
-		}
-
-		indices = ByteBuffer.allocateDirect(LONG_SIZE_BYTES * data_length);
 
 		// todo
 		// dbs->data = RTalign (CACHE_LINE_SIZE, dbs->total_length * dbs->size_max);
 		// dbs->todo_data = RTalign (CACHE_LINE_SIZE, dbs->total_length * dbs->size_max);
+		Unsafe defUnsafe;
+		try {
+			Field f = Unsafe.class.getDeclaredField("theUnsafe");
+			f.setAccessible(true);
+			defUnsafe = (Unsafe)f.get(null);
+		} catch (NoSuchFieldException e) {
+			defUnsafe = null;
+			e.printStackTrace();
+		} catch (IllegalAccessException e) {
+			defUnsafe = null;
+			e.printStackTrace();
+		}
+		this.unsafe = defUnsafe;
 
+		if(this.unsafe == null)
+		{
+			throw new NullPointerException("\"Unsafe\" isn't initialized");
+        }
+
+        indicesBase = unsafe.allocateMemory(init_size*KEY_SIZE_BYTES);
+        this.clear();
+	}
+
+	public void clear()
+	{
+		this.unsafe.setMemory(indicesBase, this.size*LONG_SIZE_BYTES, (byte) 0);
+        for (int i = 0; i < data.length; i++) {
+            data[i] = new Vector();
+        }
+//        Arrays.fill(data, null);
 	}
 
 	/** Based on s[0]*31^(n-1) + s[1]*31^(n-2) + ... + s[n-1] **/
@@ -138,27 +122,39 @@ public class FastSet {
 		return hash;
 	}
 
-	public boolean isBucketEmpty(long l)
+	public boolean isBucketEmpty(long bucketValue)
 	{
-		boolean result = (l & LONG_MASK_OCCUPIED) == 1;
+		boolean result = (bucketValue & LONG_MASK_OCCUPIED) != LONG_MASK_OCCUPIED;
 		return result;
 	}
 
-	public boolean isBucketWriting(long l)
+	public boolean isBucketWriting(long bucketValue)
 	{
-		boolean result = (l & LONG_MASK_WRITING) == 1;
+		boolean result = (bucketValue & LONG_MASK_WRITING) == LONG_MASK_WRITING;
 		return result;
 	}
 
-	public boolean setWritingCAS(long bucket, int hash)
+	public boolean setWritingCAS(long bucketOffsetBytes, long hashValue)
 	{
-
 		boolean success = false;
 		// <h,WRITE>
-		long newValue = hash | LONG_MASK_WRITING;
-		//success = this.value.compareAndSet(VALUE_EMPTY, newValue);
-		return success;
+		long newValue = hashValue | LONG_MASK_WRITING | LONG_MASK_OCCUPIED;
+        success = this.unsafe.compareAndSwapLong(null,indicesBase+bucketOffsetBytes, LONG_KEYVALUE_EMPTY, newValue);
+        return success;
 	}
+
+    public void removeWritingFlag(int bucketOffsetBytes, int hashValue) {
+        if(true){//temp assertion
+            long expected = hashValue | LONG_MASK_WRITING | LONG_MASK_OCCUPIED;
+            long actual = unsafe.getLong(indicesBase+bucketOffsetBytes);
+            if( expected != actual) {
+                throw new AssertionError(String.format("Expected value %d != %d\n", expected, actual));
+            }
+        }
+
+        long newValue = hashValue | LONG_MASK_OCCUPIED; //should effectively only remove WRITING flag, compared to the current value stored at the address
+        unsafe.putLong(indicesBase+bucketOffsetBytes, newValue);
+    }
 
 	boolean find_or_put(Vector v, boolean insertAbsent)
 	{
@@ -172,42 +168,55 @@ public class FastSet {
 		boolean found = false;
 		while (count < THRESHOLD) {
 			for (int i = lineStart; i < lineStart + CACHE_LINE_SIZE; i++) {
-				int position = i % this.size;
-				long bucket = indices.getLong(LONG_SIZE_BYTES * position);
-				if (isBucketEmpty(bucket)) {
-					if (setWritingCAS(bucket, h)) {
-						data[position] = v;
-						buckets[position].setDone(h);
+                int bucketOffsetLongs = i % this.size;
+                int bucketOffsetBytes = bucketOffsetLongs * LONG_SIZE_BYTES ;
+				long bucketValue = unsafe.getLong(indicesBase+bucketOffsetBytes); //TODO: Maybe 'getLong' inside methods instead of passing "old" value around
+				if (isBucketEmpty(bucketValue)) {
+					if (setWritingCAS(bucketOffsetBytes, h)) {
+						data[bucketOffsetLongs] = v;
+						removeWritingFlag(bucketOffsetBytes, h);
 						return false;
 					}
 					else {
-
+                        //cas failed, aka bucket != empty. continue.
 					}
 				}
 				else // if( !buckets[position].isEmpty())
 				{
-					while (buckets[position].isWriting()) {
-						logV("waiting...");
-						// wait...
-					}
-					if (data[position].equals(v)) {
+                    bucketValue = unsafe.getLong(indicesBase+bucketOffsetBytes);
+                    while (isBucketWriting(bucketValue)) {
+                        bucketValue = unsafe.getLong(indicesBase + bucketOffsetBytes);
+                        //TODO: compare the hashes if they are equal, only then wait (to check if data is equal when writing is finished)
+                        logV("waiting...");
+                    }
+
+                    if (data[bucketOffsetLongs] == null) {
+                        throw new AssertionError("bucket wasn't empty, but data related to that bucket was null");
+                    }
+                    if (data[bucketOffsetLongs].equals(v)) {
 						logV("equal data found");
 						return true;
 					}
 					else {
-						logV(String.format("Non equal data (%s instead of %s) in bucket (%d, %s)", data[position], v, position,
-								buckets[position]));
+						logV(String.format("Non equal data (%s instead of %s) in bucket (%d (l), %d)", data[bucketOffsetLongs], v, bucketOffsetLongs,
+								bucketValue));
 						// else continue probing
 					}
 				}
 			}
 
 			count++;
-			logV("rehashing");
+			logV("rehashing #"+count);
 			lineStart = Math.abs(stringHash(v.value, count) % size);
 		}
 
 		logE(String.format("Unable to insert \"%s\" (Threshold exceeded)", v.toString()));
 		return found;
 	}
+
+    public void cleanup() {
+        unsafe.freeMemory(indicesBase);
+    }
+
+
 }
