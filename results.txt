@@ -14,3 +14,21 @@ Inserting 8192 vectors took 18.8360 seconds on 1 threads. 8164/8192 data[] place
 Inserting 8192 vectors took 14.0560 seconds on 2 threads. 8163/8192 data[] places were filled.
 oInserting 8192 vectors took 14.5860 seconds on 4 threads. 8163/8192 data[] places were filled.
 Inserting 8192 vectors took 11.5360 seconds on 8 threads. 8161/8192 data[] places were filled.
+
+==================================================
+
+/usr/lib/jvm/java-8-openjdk-amd64/bin/java -Didea.launcher.port=7535 -Didea.launcher.bin.path=/home/willem/Programs/idea-IU-145.972.3/bin -Dfile.encoding=UTF-8 -classpath /home/willem/dev/fast_set_java/bin:/usr/lib/jvm/java-8-openjdk-amd64/jre/lib/charsets.jar:/usr/lib/jvm/java-8-openjdk-amd64/jre/lib/ext/cldrdata.jar:/usr/lib/jvm/java-8-openjdk-amd64/jre/lib/ext/dnsns.jar:/usr/lib/jvm/java-8-openjdk-amd64/jre/lib/ext/icedtea-sound.jar:/usr/lib/jvm/java-8-openjdk-amd64/jre/lib/ext/jaccess.jar:/usr/lib/jvm/java-8-openjdk-amd64/jre/lib/ext/localedata.jar:/usr/lib/jvm/java-8-openjdk-amd64/jre/lib/ext/nashorn.jar:/usr/lib/jvm/java-8-openjdk-amd64/jre/lib/ext/sunec.jar:/usr/lib/jvm/java-8-openjdk-amd64/jre/lib/ext/sunjce_provider.jar:/usr/lib/jvm/java-8-openjdk-amd64/jre/lib/ext/sunpkcs11.jar:/usr/lib/jvm/java-8-openjdk-amd64/jre/lib/ext/zipfs.jar:/usr/lib/jvm/java-8-openjdk-amd64/jre/lib/jce.jar:/usr/lib/jvm/java-8-openjdk-amd64/jre/lib/jsse.jar:/usr/lib/jvm/java-8-openjdk-amd64/jre/lib/management-agent.jar:/usr/lib/jvm/java-8-openjdk-amd64/jre/lib/resources.jar:/usr/lib/jvm/java-8-openjdk-amd64/jre/lib/rt.jar:/home/willem/Programs/idea-IU-145.972.3/lib/junit-4.12.jar:/home/willem/Programs/idea-IU-145.972.3/lib/idea_rt.jar com.intellij.rt.execution.application.AppMain fast_hashtable.Main
+Benchmark results at 14:07 2016-05-25 (System: Intel i5-3210M)
+Free-factor: 4
+Result{run#=0, statespace=8192, time=3.9460, threadCnt=1, insertedCnt=8192, speedup=1.000, relSpeedup=1.000}
+Result{run#=1, statespace=8192, time=1.9450, threadCnt=2, insertedCnt=8192, speedup=2.029, relSpeedup=1.014}
+Result{run#=2, statespace=8192, time=1.5400, threadCnt=4, insertedCnt=8192, speedup=2.562, relSpeedup=0.641}
+Result{run#=3, statespace=8192, time=1.6010, threadCnt=8, insertedCnt=8192, speedup=2.465, relSpeedup=0.308}
+
+/usr/lib/jvm/java-8-openjdk-amd64/bin/java -Didea.launcher.port=7536 -Didea.launcher.bin.path=/home/willem/Programs/idea-IU-145.972.3/bin -Dfile.encoding=UTF-8 -classpath /home/willem/dev/fast_set_java/bin:/usr/lib/jvm/java-8-openjdk-amd64/jre/lib/charsets.jar:/usr/lib/jvm/java-8-openjdk-amd64/jre/lib/ext/cldrdata.jar:/usr/lib/jvm/java-8-openjdk-amd64/jre/lib/ext/dnsns.jar:/usr/lib/jvm/java-8-openjdk-amd64/jre/lib/ext/icedtea-sound.jar:/usr/lib/jvm/java-8-openjdk-amd64/jre/lib/ext/jaccess.jar:/usr/lib/jvm/java-8-openjdk-amd64/jre/lib/ext/localedata.jar:/usr/lib/jvm/java-8-openjdk-amd64/jre/lib/ext/nashorn.jar:/usr/lib/jvm/java-8-openjdk-amd64/jre/lib/ext/sunec.jar:/usr/lib/jvm/java-8-openjdk-amd64/jre/lib/ext/sunjce_provider.jar:/usr/lib/jvm/java-8-openjdk-amd64/jre/lib/ext/sunpkcs11.jar:/usr/lib/jvm/java-8-openjdk-amd64/jre/lib/ext/zipfs.jar:/usr/lib/jvm/java-8-openjdk-amd64/jre/lib/jce.jar:/usr/lib/jvm/java-8-openjdk-amd64/jre/lib/jsse.jar:/usr/lib/jvm/java-8-openjdk-amd64/jre/lib/management-agent.jar:/usr/lib/jvm/java-8-openjdk-amd64/jre/lib/resources.jar:/usr/lib/jvm/java-8-openjdk-amd64/jre/lib/rt.jar:/home/willem/Programs/idea-IU-145.972.3/lib/junit-4.12.jar:/home/willem/Programs/idea-IU-145.972.3/lib/idea_rt.jar com.intellij.rt.execution.application.AppMain fast_hashtable.Main
+Benchmark results at 14:09 2016-05-25 (System: Intel i5-3210M)
+Free-factor: 1
+Result{run#=0, statespace=8192, time=7.8090, threadCnt=1, insertedCnt=8190, speedup=1.000, relSpeedup=1.000}
+Result{run#=1, statespace=8192, time=5.2030, threadCnt=2, insertedCnt=8186, speedup=1.501, relSpeedup=0.750}
+Result{run#=2, statespace=8192, time=4.4290, threadCnt=4, insertedCnt=8185, speedup=1.763, relSpeedup=0.441}
+Result{run#=3, statespace=8192, time=3.8170, threadCnt=8, insertedCnt=8187, speedup=2.046, relSpeedup=0.256}

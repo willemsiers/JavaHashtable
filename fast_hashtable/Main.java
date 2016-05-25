@@ -1,121 +1,138 @@
 package fast_hashtable;
 
+import fast_hashtable.FastSet.Vector;
+
+import java.text.SimpleDateFormat;
 import java.util.Arrays;
+import java.util.Date;
 import java.util.concurrent.BrokenBarrierException;
 import java.util.concurrent.CyclicBarrier;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
 
-import fast_hashtable.FastSet.Vector;
-
 import static other.Logger.logV;
 
 public class Main {
 
+
 	public static void main(String[] args)
 	{
-//		long mask = 1l << (8*8-1);
-//		long a = 4;
-//		long b = a | mask;
 
-        final int STATESPACE_SIZE = 64 * 1024;
-        final int FREE_FACTOR = 4;
-		FastSet s = new FastSet(1, STATESPACE_SIZE * FREE_FACTOR);
-		Vector[] statespace = new Vector[STATESPACE_SIZE];
-		for (int i = 0; i < STATESPACE_SIZE; i++) 
-		{
-			statespace[i] = s.new Vector();
-			statespace[i].value = "" + i;
-		}
+		final int STATESPACE_SIZE = 8 * 1024;
+		final int FREE_FACTOR = 1;
 
-		final int NUM_OF_THREADS = 4; //powers of 2
-		CyclicBarrier barrier = new CyclicBarrier(NUM_OF_THREADS + 1);
-		Thread[] threads = new Thread[NUM_OF_THREADS];
-		int workLeft = STATESPACE_SIZE;
-		for (int threadNo = 0; threadNo < NUM_OF_THREADS; threadNo++) 
-		{
-			class Work implements Runnable {
+		int[] threadCounts = {1,2,4,8};
+		BenchmarkResult[] benchmarkResults = new BenchmarkResult[threadCounts.length];
+		BenchmarkResult.system = "Intel i5-3210M";
 
-				public Vector[] unprocessed = null;
-				public int workSize = 0;
+		for (int run = 0; run < threadCounts.length; run++) {
 
-				public Work(Vector[] data)
-				{
-					this.unprocessed = data;
-					this.workSize = data.length;
-				}
+			FastSet s = new FastSet(1, STATESPACE_SIZE * FREE_FACTOR);
+			Vector[] statespace = new Vector[STATESPACE_SIZE];
+			for (int i = 0; i < STATESPACE_SIZE; i++)
+            {
+                statespace[i] = s.new Vector();
+                statespace[i].value = "" + i;
+            }
 
-				@Override
-				public void run()
-				{
-					try {
-						barrier.await(10, TimeUnit.SECONDS);
-					} catch (InterruptedException | BrokenBarrierException | TimeoutException e) {
-						e.printStackTrace();
-					}
-					logV("starting thread-"+Thread.currentThread().getName());
+			final int NUM_OF_THREADS = threadCounts[run]; //powers of 2
+			CyclicBarrier barrier = new CyclicBarrier(NUM_OF_THREADS + 1);
+			Thread[] threads = new Thread[NUM_OF_THREADS];
+			int workLeft = STATESPACE_SIZE;
+			for (int threadNo = 0; threadNo < NUM_OF_THREADS; threadNo++)
+            {
+                class Work implements Runnable {
 
-					for (int i = 0; i < workSize; i++) 
-					{
-						boolean found = s.find_or_put(unprocessed[i], true); // if false, data is put
-						logV("found:" + found + " for " + unprocessed[i].toString());
-					}
-				}
-				
-			}
+                    public Vector[] unprocessed = null;
+                    public int workSize = 0;
 
-			int from = STATESPACE_SIZE - workLeft;
-			int to = from + STATESPACE_SIZE / NUM_OF_THREADS;
-			Work work = new Work(Arrays.copyOfRange(statespace, from, to));
+                    public Work(Vector[] data)
+                    {
+                        this.unprocessed = data;
+                        this.workSize = data.length;
+                    }
 
-			Thread worker = new Thread(work);
-			worker.setName("worker-"+threadNo);
-			threads[threadNo] = worker;
-			workLeft -= (to-from);
-		}
-		if(workLeft != 0)
-		{
-			throw new RuntimeException("workLeft != 0, but "+workLeft);
-		}
-		
-		for (Thread worker : threads) 
-		{
-			worker.start();
-		}
-		
-		try {
-			barrier.await(10, TimeUnit.SECONDS);
-		} catch (InterruptedException | BrokenBarrierException | TimeoutException e1) {
-			e1.printStackTrace();
-		}
-		
-		long startMs = System.currentTimeMillis();
+                    @Override
+                    public void run()
+                    {
+                        try {
+                            barrier.await(10, TimeUnit.SECONDS);
+                        } catch (InterruptedException | BrokenBarrierException | TimeoutException e) {
+                            e.printStackTrace();
+                        }
+                        logV("starting thread-"+Thread.currentThread().getName());
 
-		for (Thread thread : threads) 
-		{
+                        for (int i = 0; i < workSize; i++)
+                        {
+                            boolean found = s.find_or_put(unprocessed[i], true); // if false, data is put
+                            logV("found:" + found + " for " + unprocessed[i].toString());
+                        }
+                    }
+
+                }
+
+                int from = STATESPACE_SIZE - workLeft;
+                int to = from + STATESPACE_SIZE / NUM_OF_THREADS;
+                Work work = new Work(Arrays.copyOfRange(statespace, from, to));
+
+                Thread worker = new Thread(work);
+                worker.setName("worker-"+threadNo);
+                threads[threadNo] = worker;
+                workLeft -= (to-from);
+            }
+			if(workLeft != 0)
+            {
+                throw new RuntimeException("workLeft != 0, but "+workLeft);
+            }
+
+			for (Thread worker : threads)
+            {
+                worker.start();
+            }
+
 			try {
-				thread.join();
-			} catch (InterruptedException e) {
-				e.printStackTrace();
-			}
+                barrier.await(10, TimeUnit.SECONDS);
+            } catch (InterruptedException | BrokenBarrierException | TimeoutException e1) {
+                e1.printStackTrace();
+            }
+
+			long startMs = System.currentTimeMillis();
+
+			for (Thread thread : threads)
+            {
+                try {
+                    thread.join();
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+            }
+
+			long endMs = System.currentTimeMillis();
+			long diffMs = endMs - startMs;
+			double diffSeconds = diffMs / 1000f;
+
+			int insertedCounter = 0;
+			for (int i = 0; i<s.data.length; i++)
+            {
+                if(s.data[i].value != null)
+                {
+                    insertedCounter ++ ;
+                }
+                logV("data "+i+":\t" + s.data[i]);
+            }
+
+			s.cleanup();
+
+			benchmarkResults[run] = new BenchmarkResult(run, STATESPACE_SIZE, diffSeconds, NUM_OF_THREADS, insertedCounter);
+			benchmarkResults[run].speedup = benchmarkResults[0].diffSeconds / benchmarkResults[run].diffSeconds;
+			benchmarkResults[run].relSpeedup = benchmarkResults[run].speedup / benchmarkResults[run].num_of_threads;
+//			System.out.printf("Inserting %d vectors took %.4f seconds on %d threads. %d/%d data[] places were filled.\n", STATESPACE_SIZE, diffSeconds, NUM_OF_THREADS, insertedCounter, s.data.length);
 		}
-		
-		long endMs = System.currentTimeMillis();
-		long diffMs = endMs - startMs;
-		double diffSeconds = diffMs / 1000f;
 
-		int insertedCounter = 0;
-		for (int i = 0; i<s.data.length; i++) 
-		{
-			if(s.data[i].value != null)
-			{
-				insertedCounter ++ ;
-			}
-			logV("data "+i+":\t" + s.data[i]);
+		System.out.printf("Benchmark results at %s (System: %s)\n",new SimpleDateFormat("HH:mm yyyy-MM-dd").format(new Date()),BenchmarkResult.system);
+		System.out.println("Free-factor: "+FREE_FACTOR);
+		for (BenchmarkResult result : benchmarkResults) {
+			System.out.println(result.toString());
 		}
-
-		s.cleanup();
-
-		System.out.printf("Inserting %d vectors took %.4f seconds on %d threads. %d/%d data[] places were filled.", STATESPACE_SIZE, diffSeconds, NUM_OF_THREADS, insertedCounter, s.data.length);
 	}
 }
