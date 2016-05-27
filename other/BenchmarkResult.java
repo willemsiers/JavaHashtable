@@ -2,6 +2,7 @@ package other;
 
 public class BenchmarkResult {
 	public static String system;
+	public static String mapImplementation;
 	public final int run;
 	public final int statespace_size;
 	public final double diffSeconds;

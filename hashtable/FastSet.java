@@ -8,7 +8,7 @@ import java.lang.reflect.Field;
 import static other.Logger.logE;
 import static other.Logger.logV;
 
-public class FastSet {
+public class FastSet implements AbstractFastSet{
 
 	private static final long LONG_KEYVALUE_EMPTY = 0;
 	final int LONG_SIZE_BYTES = 8;
@@ -20,49 +20,6 @@ public class FastSet {
 	public final long indicesBase;
 	public final Vector[] data;
 	int size = 0;
-
-	/**
-	 * Vector = State data
-	 */
-	public class Vector {
-		public String value = null;
-
-		@Override
-		public String toString() {
-			return value;
-		}
-
-		@Override
-		public int hashCode() {
-			// note: Object.hashCode is non-deterministic (based on memory address), String.hashCode is.
-			if (value == null) {
-				return 0;
-			}
-			return Math.abs(value.hashCode());
-		}
-
-		@Override
-		public boolean equals(Object o) {
-			boolean result = false;
-
-			if (value != null) {
-				if (o instanceof String) {
-					String s = (String) o;
-					result = value.equals(s);
-				}
-			}
-
-			return result;
-		}
-	}
-
-//		public String Bucket.toString()
-//		{
-//			int value = this.value.get();
-//			String result = "bckt_"
-//					+ (value == VALUE_EMPTY ? "empty" : String.format("%d (%d)", getNumerical(), getNumerical() % size));
-//			return result;
-//		}
 
 	// fset_t * fset_create (size_t key_length, size_t data_length, size_t init_size, size_t max_size)
 	public FastSet(int key_length, int init_size) {
@@ -106,16 +63,21 @@ public class FastSet {
 	 * Based on s[0]*31^(n-1) + s[1]*31^(n-2) + ... + s[n-1]
 	 **/
 	public int stringHash(String s, int iteration) {
+		return s.hashCode() * iteration;
+
 		// TODO: better hash function
-		int hash = 0;
-		int prime = Primes.primes[iteration + 10];
-		int length = s.length();
-		char[] chars = s.toCharArray();
-		for (int i = 0; i < length; i++) {
-			long h = (long) (chars[i] * Math.pow((double) prime, (double) length - 1));
-			hash += (int) h;
-		}
-		return hash;
+//		int hash = 0;
+//		int prime = Primes.primes[iteration + 10];
+//		int length = s.length();
+//		byte[] chars = s.toCharArray();
+//		for (int i = 0; i < length; i++) {
+//			long h = (long) (chars[i] * Math.pow((double) prime, (double) length - 1));
+//			hash += (int) h;
+//		}
+//		if(iteration == 1){
+//			System.out.println(hash);
+//		}
+//		return hash;
 	}
 
 	public boolean isBucketEmpty(long bucketValue) {
@@ -149,13 +111,14 @@ public class FastSet {
 		unsafe.putLong(indicesBase + bucketOffsetBytes, newValue);
 	}
 
-	boolean find_or_put(Vector v, boolean insertAbsent) {
+	@Override
+	public boolean findOrPut(Vector v, boolean insertAbsent) {
 		int count = 1;
 		int h = Math.abs(stringHash(v.value, count));
 		// logV("Putting: "+h);
 		int lineStart = h % size;
 		final int THRESHOLD = 1000;
-		final int CACHE_LINE_SIZE = 8;
+		final int CACHE_LINE_SIZE = 4;
 
 		boolean found = false;
 		while (count < THRESHOLD) {
@@ -173,6 +136,7 @@ public class FastSet {
 					}
 				} else // if( !buckets[position].isEmpty())
 				{
+					Debug.colissions.incrementAndGet();
 					bucketValue = unsafe.getLong(indicesBase + bucketOffsetBytes);
 					while (isBucketWriting(bucketValue)) {
 						bucketValue = unsafe.getLong(indicesBase + bucketOffsetBytes);
@@ -203,6 +167,12 @@ public class FastSet {
 		return found;
 	}
 
+	@Override
+	public Vector[] getData() {
+		return data;
+	}
+
+	@Override
 	public void cleanup() {
 		unsafe.freeMemory(indicesBase);
 	}

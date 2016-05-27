@@ -1,6 +1,5 @@
 package hashtable;
 
-import hashtable.FastSet.Vector;
 import other.BenchmarkResult;
 
 import java.io.IOException;
@@ -8,21 +7,19 @@ import java.io.InputStream;
 import java.text.SimpleDateFormat;
 import java.util.Arrays;
 import java.util.Date;
+import java.util.Hashtable;
 import java.util.Scanner;
-import java.util.concurrent.BrokenBarrierException;
-import java.util.concurrent.CyclicBarrier;
-import java.util.concurrent.TimeUnit;
-import java.util.concurrent.TimeoutException;
+import java.util.concurrent.*;
 
 import static other.Logger.logV;
 
 public class Main {
 
 	public static void main(String[] args) {
-		final int STATESPACE_SIZE = 16 * 1024;
+		final int STATESPACE_SIZE = 1024 * 1024;
 		final int FREE_FACTOR = 4;
 
-		int[] threadCounts = {1, 2, 4, 8, 16};
+		int[] threadCounts = {1,2,4,8,16};
 		BenchmarkResult[] benchmarkResults = new BenchmarkResult[threadCounts.length];
 
 		String hostname = getHostname();
@@ -30,10 +27,12 @@ public class Main {
 
 		for (int run = 0; run < threadCounts.length; run++) {
 
-			final FastSet s = new FastSet(1, STATESPACE_SIZE * FREE_FACTOR);
+			final AbstractFastSet s = new FastSet(1, STATESPACE_SIZE * FREE_FACTOR);
+			//final AbstractFastSet s = new HashtableWrapper(new ConcurrentHashMap<Vector,Vector>(STATESPACE_SIZE * FREE_FACTOR));
+			BenchmarkResult.mapImplementation = s.getClass().getCanonicalName();
 			Vector[] statespace = new Vector[STATESPACE_SIZE];
 			for (int i = 0; i < STATESPACE_SIZE; i++) {
-				statespace[i] = s.new Vector();
+				statespace[i] = new Vector();
 				statespace[i].value = "" + i;
 			}
 
@@ -63,11 +62,10 @@ public class Main {
 						logV("starting thread-" + Thread.currentThread().getName());
 
 						for (int i = 0; i < workSize; i++) {
-							boolean found = s.find_or_put(unprocessed[i], true); // if false, data is put
+							boolean found = s.findOrPut(unprocessed[i], true); // if false, data is put
 							logV("found:" + found + " for " + unprocessed[i].toString());
 						}
 					}
-
 				}
 
 				int from = STATESPACE_SIZE - workLeft;
@@ -108,11 +106,12 @@ public class Main {
 			double diffSeconds = diffMs / 1000f;
 
 			int insertedCounter = 0;
-			for (int i = 0; i < s.data.length; i++) {
-				if (s.data[i].value != null) {
+			Vector[] resultData = s.getData();
+			for (int i = 0; i < resultData.length; i++) {
+				if (resultData[i].value != null) {
 					insertedCounter++;
 				}
-				logV("data " + i + ":\t" + s.data[i]);
+				logV("data " + i + ":\t" + resultData[i]);
 			}
 
 			s.cleanup();
@@ -120,10 +119,12 @@ public class Main {
 			benchmarkResults[run] = new BenchmarkResult(run, STATESPACE_SIZE, diffSeconds, NUM_OF_THREADS, insertedCounter);
 			benchmarkResults[run].speedup = benchmarkResults[0].diffSeconds / benchmarkResults[run].diffSeconds;
 			benchmarkResults[run].relSpeedup = benchmarkResults[run].speedup / benchmarkResults[run].num_of_threads;
-//			System.out.printf("Inserting %d vectors took %.4f seconds on %d threads. %d/%d data[] places were filled.\n", STATESPACE_SIZE, diffSeconds, NUM_OF_THREADS, insertedCounter, s.data.length);
+//			System.out.printf("Inserting %d vectors took %.4f seconds on %d threads. %d/%d data[] places were filled.\n", STATESPACE_SIZE, diffSeconds, NUM_OF_THREADS, insertedCounter, resultData.length);
 		}
 
-		System.out.printf("Benchmark results at %s (System: %s)\n", new SimpleDateFormat("HH:mm yyyy-MM-dd").format(new Date()), BenchmarkResult.system);
+		System.out.println("Colisssions: "+Debug.colissions);
+		Debug.colissions.set(0);
+		System.out.printf("Benchmark results for %s at %s (System: %s)\n", BenchmarkResult.mapImplementation, new SimpleDateFormat("HH:mm yyyy-MM-dd").format(new Date()), BenchmarkResult.system);
 		System.out.println("Free-factor: " + FREE_FACTOR);
 		for (BenchmarkResult result : benchmarkResults) {
 			System.out.println(result.toString());
