@@ -32,3 +32,43 @@ Result{run#=0, statespace=8192, time=7.8090, threadCnt=1, insertedCnt=8190, spee
 Result{run#=1, statespace=8192, time=5.2030, threadCnt=2, insertedCnt=8186, speedup=1.501, relSpeedup=0.750}
 Result{run#=2, statespace=8192, time=4.4290, threadCnt=4, insertedCnt=8185, speedup=1.763, relSpeedup=0.441}
 Result{run#=3, statespace=8192, time=3.8170, threadCnt=8, insertedCnt=8187, speedup=2.046, relSpeedup=0.256}
+
+s1424661@oldemeule:~/JavaHashtable$ cat htlog_May_27_1111h.txt
+Argument:
+Starting benchmark...
+Benchmark results at 11:42 2016-05-27 (System: Oldemeule)
+Free-factor: 4
+Result{run#=0, statespace=131072, time=670.9510, threadCnt=1, insertedCnt=131072, speedup=1.000, relSpeedup=1.000}
+Result{run#=1, statespace=131072, time=478.9680, threadCnt=2, insertedCnt=131072, speedup=1.401, relSpeedup=0.700}
+Result{run#=2, statespace=131072, time=246.7010, threadCnt=4, insertedCnt=131072, speedup=2.720, relSpeedup=0.680}
+Result{run#=3, statespace=131072, time=135.2190, threadCnt=8, insertedCnt=131072, speedup=4.962, relSpeedup=0.620}
+Result{run#=4, statespace=131072, time=94.0070, threadCnt=16, insertedCnt=131072, speedup=7.137, relSpeedup=0.446}
+Result{run#=5, statespace=131072, time=86.5910, threadCnt=32, insertedCnt=131072, speedup=7.749, relSpeedup=0.242}
+Result{run#=6, statespace=131072, time=83.8510, threadCnt=64, insertedCnt=131072, speedup=8.002, relSpeedup=0.125}
+Result{run#=7, statespace=131072, time=83.8550, threadCnt=128, insertedCnt=131072, speedup=8.001, relSpeedup=0.063}
+
+==========
+Argument: _N10
+Starting benchmark...
+Benchmark results at 12:26 2016-05-27 (System: M610)
+Free-factor: 4
+Result{run#=0, statespace=131072, time=714.7890, threadCnt=1, insertedCnt=131072, speedup=1.000, relSpeedup=1.000}
+Result{run#=1, statespace=131072, time=489.9820, threadCnt=2, insertedCnt=131072, speedup=1.459, relSpeedup=0.729}
+Result{run#=2, statespace=131072, time=242.9690, threadCnt=4, insertedCnt=131072, speedup=2.942, relSpeedup=0.735}
+Result{run#=3, statespace=131072, time=154.3570, threadCnt=8, insertedCnt=131072, speedup=4.631, relSpeedup=0.579}
+Result{run#=4, statespace=131072, time=99.6860, threadCnt=16, insertedCnt=131072, speedup=7.170, relSpeedup=0.448}
+Result{run#=5, statespace=131072, time=88.5780, threadCnt=32, insertedCnt=131072, speedup=8.070, relSpeedup=0.252}
+Result{run#=6, statespace=131072, time=84.8970, threadCnt=64, insertedCnt=131072, speedup=8.419, relSpeedup=0.132}
+Result{run#=7, statespace=131072, time=82.2130, threadCnt=128, insertedCnt=131072, speedup=8.694, relSpeedup=0.068}
+Argument: _N1
+Starting benchmark...
+Benchmark results at 12:26 2016-05-27 (System: M610)
+Free-factor: 4
+Result{run#=0, statespace=131072, time=672.5200, threadCnt=1, insertedCnt=131072, speedup=1.000, relSpeedup=1.000}
+Result{run#=1, statespace=131072, time=485.9770, threadCnt=2, insertedCnt=131072, speedup=1.384, relSpeedup=0.692}
+Result{run#=2, statespace=131072, time=247.0560, threadCnt=4, insertedCnt=131072, speedup=2.722, relSpeedup=0.681}
+Result{run#=3, statespace=131072, time=157.1850, threadCnt=8, insertedCnt=131072, speedup=4.279, relSpeedup=0.535}
+Result{run#=4, statespace=131072, time=110.7590, threadCnt=16, insertedCnt=131072, speedup=6.072, relSpeedup=0.379}
+Result{run#=5, statespace=131072, time=101.3920, threadCnt=32, insertedCnt=131072, speedup=6.633, relSpeedup=0.207}
+Result{run#=6, statespace=131072, time=96.6580, threadCnt=64, insertedCnt=131072, speedup=6.958, relSpeedup=0.109}
+Result{run#=7, statespace=131072, time=96.9020, threadCnt=128, insertedCnt=131072, speedup=6.940, relSpeedup=0.054}

@@ -2,9 +2,12 @@ package fast_hashtable;
 
 import fast_hashtable.FastSet.Vector;
 
+import java.io.IOException;
+import java.io.InputStream;
 import java.text.SimpleDateFormat;
 import java.util.Arrays;
 import java.util.Date;
+import java.util.Scanner;
 import java.util.concurrent.BrokenBarrierException;
 import java.util.concurrent.CyclicBarrier;
 import java.util.concurrent.TimeUnit;
@@ -14,20 +17,20 @@ import static other.Logger.logV;
 
 public class Main {
 
-
-	public static void main(String[] args)
+    public static void main(String[] args)
 	{
+		final int STATESPACE_SIZE = 16 * 1024;
+		final int FREE_FACTOR = 4;
 
-		final int STATESPACE_SIZE = 8 * 1024;
-		final int FREE_FACTOR = 1;
+        int[] threadCounts = {1,2,4,8,16};
+        BenchmarkResult[] benchmarkResults = new BenchmarkResult[threadCounts.length];
 
-		int[] threadCounts = {1,2,4,8};
-		BenchmarkResult[] benchmarkResults = new BenchmarkResult[threadCounts.length];
-		BenchmarkResult.system = "Intel i5-3210M";
+        String hostname = getHostname();
+        BenchmarkResult.system = hostname;
 
 		for (int run = 0; run < threadCounts.length; run++) {
 
-			FastSet s = new FastSet(1, STATESPACE_SIZE * FREE_FACTOR);
+			final FastSet s = new FastSet(1, STATESPACE_SIZE * FREE_FACTOR);
 			Vector[] statespace = new Vector[STATESPACE_SIZE];
 			for (int i = 0; i < STATESPACE_SIZE; i++)
             {
@@ -36,8 +39,9 @@ public class Main {
             }
 
 			final int NUM_OF_THREADS = threadCounts[run]; //powers of 2
-			CyclicBarrier barrier = new CyclicBarrier(NUM_OF_THREADS + 1);
-			Thread[] threads = new Thread[NUM_OF_THREADS];
+            System.out.printf("Starting run #%d on %d threads\n",run,NUM_OF_THREADS);
+            final CyclicBarrier barrier = new CyclicBarrier(NUM_OF_THREADS + 1);
+			final Thread[] threads = new Thread[NUM_OF_THREADS];
 			int workLeft = STATESPACE_SIZE;
 			for (int threadNo = 0; threadNo < NUM_OF_THREADS; threadNo++)
             {
@@ -135,4 +139,20 @@ public class Main {
 			System.out.println(result.toString());
 		}
 	}
+
+    public static String getHostname() {
+        String hostname;
+        try{
+            Process proc = Runtime.getRuntime().exec("hostname");
+            try (InputStream stream = proc.getInputStream()) {
+                try (Scanner s = new Scanner(stream).useDelimiter("\\A")) {
+                    hostname = s.hasNext() ? s.next() : "unknown";
+                }
+            }
+        } catch (IOException e) {
+            hostname = "unknown";
+            e.printStackTrace();
+        }
+        return hostname;
+    }
 }
