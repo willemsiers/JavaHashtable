@@ -1,14 +1,17 @@
 package hashtable;
 
+import other.Logger;
 import other.Primes;
 import sun.misc.Unsafe;
 
 import java.lang.reflect.Field;
 
-import static other.Logger.logE;
-import static other.Logger.logV;
+import static other.Logger.*;
 
 public class FastSet implements AbstractFastSet{
+
+	public static final boolean NO_LOGGING = Logger.LOG_LEVEL <= LOG_ERROR;
+	private boolean cleaned_up = false;
 
 	private static final long LONG_KEYVALUE_EMPTY = 0;
 	final int LONG_SIZE_BYTES = 8;
@@ -52,6 +55,9 @@ public class FastSet implements AbstractFastSet{
 	}
 
 	public void clear() {
+		if(cleaned_up){
+			throw new RuntimeException("FastSet was already freed");
+		}
 		this.unsafe.setMemory(indicesBase, this.size * LONG_SIZE_BYTES, (byte) 0);
 		for (int i = 0; i < data.length; i++) {
 			data[i] = new Vector();
@@ -113,12 +119,14 @@ public class FastSet implements AbstractFastSet{
 
 	@Override
 	public boolean findOrPut(Vector v, boolean insertAbsent) {
+		if(cleaned_up){
+			throw new RuntimeException("FastSet was already freed");
+		}
 		int count = 1;
 		int h = Math.abs(stringHash(v.value, count));
-		// logV("Putting: "+h);
 		int lineStart = h % size;
 		final int THRESHOLD = 1000;
-		final int CACHE_LINE_SIZE = 4;
+		final int CACHE_LINE_SIZE = 8;
 
 		boolean found = false;
 		while (count < THRESHOLD) {
@@ -141,25 +149,25 @@ public class FastSet implements AbstractFastSet{
 					while (isBucketWriting(bucketValue)) {
 						bucketValue = unsafe.getLong(indicesBase + bucketOffsetBytes);
 						//TODO: compare the hashes if they are equal, only then wait (to check if data is equal when writing is finished)
-						logV("waiting...");
+						if(!NO_LOGGING){logV("waiting...");}
 					}
 
 					if (data[bucketOffsetLongs] == null) {
 						throw new AssertionError("bucket wasn't empty, but data related to that bucket was null");
 					}
 					if (data[bucketOffsetLongs].equals(v)) {
-						logV("equal data found");
+						if(!NO_LOGGING){logV("equal data found");}
 						return true;
 					} else {
-						logV(String.format("Non equal data (%s instead of %s) in bucket (%d (l), %d)", data[bucketOffsetLongs], v, bucketOffsetLongs,
-								bucketValue));
+						if(!NO_LOGGING){logV(String.format("Non equal data (%s instead of %s) in bucket (%d (l), %d)", data[bucketOffsetLongs], v, bucketOffsetLongs,
+								bucketValue));}
 						// else continue probing
 					}
 				}
 			}
 
 			count++;
-			logV("rehashing #" + count);
+			if(!NO_LOGGING){logV("rehashing #" + count);}
 			lineStart = Math.abs(stringHash(v.value, count) % size);
 		}
 
@@ -173,9 +181,17 @@ public class FastSet implements AbstractFastSet{
 	}
 
 	@Override
-	public void cleanup() {
+	public void cleanup()
+	{
+		if(cleaned_up){
+			throw new RuntimeException("FastSet was already freed");
+		}
+		cleaned_up = true;
 		unsafe.freeMemory(indicesBase);
 	}
 
-
+	@Override
+	public String toString() {
+		return "FastSet";
+	}
 }

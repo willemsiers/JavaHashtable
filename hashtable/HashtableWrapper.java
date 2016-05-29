@@ -26,6 +26,10 @@ public class HashtableWrapper implements AbstractFastSet {
 
 	@Override
 	public void cleanup(){
+	}
 
+	@Override
+	public String toString() {
+		return map.toString();
 	}
 }

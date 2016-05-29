@@ -2,41 +2,66 @@ package hashtable;
 
 import other.BenchmarkResult;
 
+import javax.swing.text.html.HTMLWriter;
 import java.io.IOException;
 import java.io.InputStream;
 import java.text.SimpleDateFormat;
-import java.util.Arrays;
-import java.util.Date;
-import java.util.Hashtable;
-import java.util.Scanner;
+import java.util.*;
 import java.util.concurrent.*;
 
 import static other.Logger.logV;
 
 public class Main {
 
+	static final int STATESPACE_SIZE = 1 * 1024 * 1024;
+	static final int FREE_FACTOR = 4;
+	static final int[] THREADCOUNTS = {1,1,2,4,8};
+
+	public enum MapType {
+		FASTSET,
+		CONCURRENT_HASHMAP,
+		HASHTABLE
+	};
+
 	public static void main(String[] args) {
-		final int STATESPACE_SIZE = 1024 * 1024;
-		final int FREE_FACTOR = 4;
+		printMemoryMax();
+		performBenchmark(MapType.CONCURRENT_HASHMAP);
+		performBenchmark(MapType.HASHTABLE);
+		performBenchmark(MapType.FASTSET);
+	}
 
-		int[] threadCounts = {1,2,4,8,16};
-		BenchmarkResult[] benchmarkResults = new BenchmarkResult[threadCounts.length];
+	public static void performBenchmark(final MapType MAP_TYPE) {
 
-		String hostname = getHostname();
+		BenchmarkResult[] benchmarkResults = new BenchmarkResult[THREADCOUNTS.length];
+																																																																															
+																																																																																	String hostname = getHostname();
 		BenchmarkResult.system = hostname;
 
-		for (int run = 0; run < threadCounts.length; run++) {
+		for (int run = 0; run < THREADCOUNTS.length; run++) {
+			final AbstractFastSet s;
 
-			final AbstractFastSet s = new FastSet(1, STATESPACE_SIZE * FREE_FACTOR);
-			//final AbstractFastSet s = new HashtableWrapper(new ConcurrentHashMap<Vector,Vector>(STATESPACE_SIZE * FREE_FACTOR));
-			BenchmarkResult.mapImplementation = s.getClass().getCanonicalName();
+			switch (MAP_TYPE){
+				case FASTSET:
+					s = new FastSet(1, STATESPACE_SIZE * FREE_FACTOR);
+					break;
+				case CONCURRENT_HASHMAP:
+					s = new HashtableWrapper(new ConcurrentHashMap<Vector,Vector>(STATESPACE_SIZE * FREE_FACTOR));
+					break;
+				case HASHTABLE:
+					s = new HashtableWrapper(new Hashtable<Vector,Vector>(STATESPACE_SIZE * FREE_FACTOR));
+					break;
+				default:
+					throw new IllegalArgumentException("No such map type");
+			}
+
+			BenchmarkResult.mapImplementation = s.toString();
 			Vector[] statespace = new Vector[STATESPACE_SIZE];
 			for (int i = 0; i < STATESPACE_SIZE; i++) {
 				statespace[i] = new Vector();
 				statespace[i].value = "" + i;
 			}
 
-			final int NUM_OF_THREADS = threadCounts[run]; //powers of 2
+			final int NUM_OF_THREADS = THREADCOUNTS[run]; //powers of 2
 			System.out.printf("Starting run #%d on %d threads\n", run, NUM_OF_THREADS);
 			final CyclicBarrier barrier = new CyclicBarrier(NUM_OF_THREADS + 1);
 			final Thread[] threads = new Thread[NUM_OF_THREADS];
@@ -85,7 +110,9 @@ public class Main {
 				worker.start();
 			}
 
+			System.gc();
 			try {
+				Thread.sleep(200);
 				barrier.await(10, TimeUnit.SECONDS);
 			} catch (InterruptedException | BrokenBarrierException | TimeoutException e1) {
 				e1.printStackTrace();
@@ -114,6 +141,7 @@ public class Main {
 				logV("data " + i + ":\t" + resultData[i]);
 			}
 
+			printMemoryStatistics();
 			s.cleanup();
 
 			benchmarkResults[run] = new BenchmarkResult(run, STATESPACE_SIZE, diffSeconds, NUM_OF_THREADS, insertedCounter);
@@ -122,7 +150,7 @@ public class Main {
 //			System.out.printf("Inserting %d vectors took %.4f seconds on %d threads. %d/%d data[] places were filled.\n", STATESPACE_SIZE, diffSeconds, NUM_OF_THREADS, insertedCounter, resultData.length);
 		}
 
-		System.out.println("Colisssions: "+Debug.colissions);
+		System.out.println("Colisssions: "+ Debug.colissions);
 		Debug.colissions.set(0);
 		System.out.printf("Benchmark results for %s at %s (System: %s)\n", BenchmarkResult.mapImplementation, new SimpleDateFormat("HH:mm yyyy-MM-dd").format(new Date()), BenchmarkResult.system);
 		System.out.println("Free-factor: " + FREE_FACTOR);
@@ -145,5 +173,19 @@ public class Main {
 			e.printStackTrace();
 		}
 		return hostname;
+	}
+
+
+	public static void printMemoryStatistics()
+	{
+		final int MB = 1024*1024;
+		Runtime rt = Runtime.getRuntime();
+		System.out.printf("Free:%dMB\tTotal%dMB\tMax%dMB\n", rt.freeMemory() / MB, rt.totalMemory() / MB, rt.maxMemory() / MB);
+	}
+
+	public static void printMemoryMax()
+	{
+		Runtime rt = Runtime.getRuntime();
+		System.out.printf("Max memory: %d MB\n",rt.maxMemory() / (1024*1024));
 	}
 }
