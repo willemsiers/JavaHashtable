@@ -1,6 +1,7 @@
 package hashtable;
 
 import other.BenchmarkResult;
+import other.Logger;
 
 import javax.swing.text.html.HTMLWriter;
 import java.io.IOException;
@@ -9,6 +10,7 @@ import java.text.SimpleDateFormat;
 import java.util.*;
 import java.util.concurrent.*;
 
+import static other.Logger.logE;
 import static other.Logger.logV;
 
 public class Main {
@@ -88,7 +90,9 @@ public class Main {
 
 						for (int i = 0; i < workSize; i++) {
 							boolean found = s.findOrPut(unprocessed[i], true); // if false, data is put
-							logV("found:" + found + " for " + unprocessed[i].toString());
+							if(!Logger.NO_LOGGING) {
+								logV("found:" + found + " for " + unprocessed[i].toString());
+							}
 						}
 					}
 				}
@@ -138,7 +142,9 @@ public class Main {
 				if (resultData[i].value != null) {
 					insertedCounter++;
 				}
-				logV("data " + i + ":\t" + resultData[i]);
+				if(!Logger.NO_LOGGING) {
+					logV("data " + i + ":\t" + resultData[i]);
+				}
 			}
 
 			printMemoryStatistics();

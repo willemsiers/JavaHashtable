@@ -1,7 +1,5 @@
 package hashtable;
 
-import other.Logger;
-import other.Primes;
 import sun.misc.Unsafe;
 
 import java.lang.reflect.Field;
@@ -10,7 +8,6 @@ import static other.Logger.*;
 
 public class FastSet implements AbstractFastSet{
 
-	public static final boolean NO_LOGGING = Logger.LOG_LEVEL <= LOG_ERROR;
 	private boolean cleaned_up = false;
 
 	private static final long LONG_KEYVALUE_EMPTY = 0;
