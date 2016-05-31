@@ -141,3 +141,16 @@ Result{run#=2, statespace=12582912, time=0.7830, threadCnt=1, insertedCnt=125829
 Result{run#=3, statespace=12582912, time=0.7890, threadCnt=1, insertedCnt=12582912, speedup=1.153, relSpeedup=1.153}
 Result{run#=4, statespace=12582912, time=0.8350, threadCnt=1, insertedCnt=12582912, speedup=1.090, relSpeedup=1.090}
 AFTER inlining:
+Free-factor: 3	 Overlap: 0.2
+Result{run#=0, statespace=12582912, time=0.8270, threadCnt=1, insertedCnt=12582912, speedup=1.000, relSpeedup=1.000}
+Result{run#=1, statespace=12582912, time=0.8170, threadCnt=1, insertedCnt=12582912, speedup=1.012, relSpeedup=1.012}
+Result{run#=2, statespace=12582912, time=0.7750, threadCnt=1, insertedCnt=12582912, speedup=1.067, relSpeedup=1.067}
+Result{run#=3, statespace=12582912, time=0.7870, threadCnt=1, insertedCnt=12582912, speedup=1.051, relSpeedup=1.051}
+Result{run#=4, statespace=12582912, time=0.8410, threadCnt=1, insertedCnt=12582912, speedup=0.983, relSpeedup=0.983}
+AFTER static methods:
+Free-factor: 3	 Overlap: 0.2
+Result{run#=0, statespace=12582912, time=0.8450, threadCnt=1, insertedCnt=12582912, speedup=1.000, relSpeedup=1.000}
+Result{run#=1, statespace=12582912, time=0.8040, threadCnt=1, insertedCnt=12582912, speedup=1.051, relSpeedup=1.051}
+Result{run#=2, statespace=12582912, time=0.7640, threadCnt=1, insertedCnt=12582912, speedup=1.106, relSpeedup=1.106}
+Result{run#=3, statespace=12582912, time=0.7650, threadCnt=1, insertedCnt=12582912, speedup=1.105, relSpeedup=1.105}
+Result{run#=4, statespace=12582912, time=0.8290, threadCnt=1, insertedCnt=12582912, speedup=1.019, relSpeedup=1.019}

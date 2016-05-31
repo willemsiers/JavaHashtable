@@ -26,13 +26,14 @@ public class FindCacheAlignment {
 		final int SIZE = 16;
 		final int RUN_SIZE = 8;
 
-		final long NUM_OF_RUNS = 1l*1024l*1024l*1024l;
+		final long NUM_OF_RUNS = 8l*1024*1024l*1024l;
 		long indicesBase = unsafe.allocateMemory(SIZE * SIZE_LONG);
 
+		final int startNumber = 2;
 		for(int a = 0; a<5; a++) {
-			for (int offset = 0; offset < SIZE - RUN_SIZE; offset++) {
+			for (int offsetOF = startNumber; offsetOF < SIZE - RUN_SIZE + startNumber; offsetOF++) {
+				int offset = offsetOF % RUN_SIZE;
 				long start = System.currentTimeMillis();
-				test = 0;
 				for (long run = 0; run < offset + NUM_OF_RUNS; run++) {
 					for (int i = offset; i < offset + RUN_SIZE; i++) {
 						unsafe.getLong(indicesBase + i * SIZE_LONG);

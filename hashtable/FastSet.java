@@ -11,11 +11,11 @@ public class FastSet implements AbstractFastSet{
 	private boolean cleaned_up = false;
 
 	private static final long LONG_KEYVALUE_EMPTY = 0;
-	final int LONG_SIZE_BYTES = 8;
-	final long LONG_MASK_OCCUPIED = 1l << (LONG_SIZE_BYTES * 8 - 1);
-	final long LONG_MASK_WRITING = 1l << (LONG_SIZE_BYTES * 8 - 2);
-	final long LONG_MASK_HASH = (~(LONG_MASK_OCCUPIED | LONG_MASK_WRITING));
-	final int KEY_SIZE_BYTES = LONG_SIZE_BYTES;
+	final static int LONG_SIZE_BYTES = 8;
+	final static long LONG_MASK_OCCUPIED = 1l << (LONG_SIZE_BYTES * 8 - 1);
+	final static long LONG_MASK_WRITING = 1l << (LONG_SIZE_BYTES * 8 - 2);
+	final static long LONG_MASK_HASH = (~(LONG_MASK_OCCUPIED | LONG_MASK_WRITING));
+	final static int KEY_SIZE_BYTES = LONG_SIZE_BYTES;
 	public final Unsafe unsafe;
 
 	public final long indicesBase;
@@ -66,7 +66,7 @@ public class FastSet implements AbstractFastSet{
 	/**
 	 * Based on s[0]*31^(n-1) + s[1]*31^(n-2) + ... + s[n-1]
 	 **/
-	public int stringHash(String s, int iteration) {
+	public static  int stringHash(String s, int iteration) {
 		return s.hashCode() * iteration;
 
 		// TODO: better hash function
@@ -84,12 +84,12 @@ public class FastSet implements AbstractFastSet{
 //		return hash;
 	}
 
-	public boolean isBucketEmpty(long bucketValue) {
+	public static boolean isBucketEmpty(long bucketValue) {
 		boolean result = (bucketValue & LONG_MASK_OCCUPIED) != LONG_MASK_OCCUPIED;
 		return result;
 	}
 
-	public boolean isBucketWriting(long bucketValue) {
+	public static boolean isBucketWriting(long bucketValue) {
 		boolean result = (bucketValue & LONG_MASK_WRITING) == LONG_MASK_WRITING;
 		return result;
 	}
@@ -102,7 +102,7 @@ public class FastSet implements AbstractFastSet{
 		return success;
 	}
 
-	public void removeWritingFlag(int bucketOffsetBytes, int hashValue) {
+	public  void removeWritingFlag(int bucketOffsetBytes, int hashValue) {
 		if (false) {//temp assertion
 			long expected = hashValue | LONG_MASK_WRITING | LONG_MASK_OCCUPIED;
 			long actual = unsafe.getLong(indicesBase + bucketOffsetBytes);
