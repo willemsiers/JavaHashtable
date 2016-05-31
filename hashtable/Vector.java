@@ -24,11 +24,9 @@ public class Vector {
 	public boolean equals(Object o) {
 		boolean result = false;
 
-		if (value != null) {
-			if (o instanceof String) {
-				String s = (String) o;
-				result = value.equals(s);
-			}
+		if (o instanceof Vector) {
+			String s = ((Vector) o).value;
+			result = value.equals(s);
 		}
 
 		return result;

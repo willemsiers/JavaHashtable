@@ -114,3 +114,18 @@ Result{run#=1, statespace=5242880, time=1.7550, threadCnt=1, insertedCnt=5242880
 Result{run#=2, statespace=5242880, time=0.7440, threadCnt=2, insertedCnt=5242880, speedup=11.629, relSpeedup=5.815}
 Result{run#=3, statespace=5242880, time=1.0610, threadCnt=4, insertedCnt=5242880, speedup=8.155, relSpeedup=2.039}
 Result{run#=4, statespace=5242880, time=1.3350, threadCnt=8, insertedCnt=5242880, speedup=6.481, relSpeedup=0.810}
+
+=== BEFORE checking with LONG_MASK_HASH VV
+Free-factor: 4
+Result{run#=0, statespace=5242880, time=0.3910, threadCnt=1, insertedCnt=5242880, speedup=1.000, relSpeedup=1.000}
+Result{run#=1, statespace=5242880, time=0.3700, threadCnt=1, insertedCnt=5242880, speedup=1.057, relSpeedup=1.057}
+Result{run#=2, statespace=5242880, time=0.2350, threadCnt=2, insertedCnt=5242880, speedup=1.664, relSpeedup=0.832}
+Result{run#=3, statespace=5242880, time=0.2460, threadCnt=4, insertedCnt=5242880, speedup=1.589, relSpeedup=0.397}
+Result{run#=4, statespace=5242880, time=0.1850, threadCnt=8, insertedCnt=5242880, speedup=2.114, relSpeedup=0.264}
+
+=== AFTER checking with LONG_MASK_HASH VV
+Result{run#=0, statespace=5242880, time=0.3640, threadCnt=1, insertedCnt=5242880, speedup=1.000, relSpeedup=1.000}
+Result{run#=1, statespace=5242880, time=0.3610, threadCnt=1, insertedCnt=5242880, speedup=1.008, relSpeedup=1.008}
+Result{run#=2, statespace=5242880, time=0.1730, threadCnt=2, insertedCnt=5242880, speedup=2.104, relSpeedup=1.052}
+Result{run#=3, statespace=5242880, time=0.1250, threadCnt=4, insertedCnt=5242880, speedup=2.912, relSpeedup=0.728}
+Result{run#=4, statespace=5242880, time=0.1780, threadCnt=8, insertedCnt=5242880, speedup=2.045, relSpeedup=0.256}

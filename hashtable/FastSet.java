@@ -14,6 +14,7 @@ public class FastSet implements AbstractFastSet{
 	final int LONG_SIZE_BYTES = 8;
 	final long LONG_MASK_OCCUPIED = 1l << (LONG_SIZE_BYTES * 8 - 1);
 	final long LONG_MASK_WRITING = 1l << (LONG_SIZE_BYTES * 8 - 2);
+	final long LONG_MASK_HASH = (~(LONG_MASK_OCCUPIED | LONG_MASK_WRITING));
 	final int KEY_SIZE_BYTES = LONG_SIZE_BYTES;
 	public final Unsafe unsafe;
 
@@ -102,7 +103,7 @@ public class FastSet implements AbstractFastSet{
 	}
 
 	public void removeWritingFlag(int bucketOffsetBytes, int hashValue) {
-		if (true) {//temp assertion
+		if (false) {//temp assertion
 			long expected = hashValue | LONG_MASK_WRITING | LONG_MASK_OCCUPIED;
 			long actual = unsafe.getLong(indicesBase + bucketOffsetBytes);
 			if (expected != actual) {
@@ -110,7 +111,7 @@ public class FastSet implements AbstractFastSet{
 			}
 		}
 
-		long newValue = hashValue | LONG_MASK_OCCUPIED; //should effectively only remove WRITING flag, compared to the current value stored at the address
+		long newValue = (hashValue | LONG_MASK_OCCUPIED) & (~LONG_MASK_WRITING); //should effectively only remove WRITING flag, compared to the current value stored at the address
 		unsafe.putLong(indicesBase + bucketOffsetBytes, newValue);
 	}
 
@@ -121,6 +122,7 @@ public class FastSet implements AbstractFastSet{
 		}
 		int count = 1;
 		int h = Math.abs(stringHash(v.value, count));
+		final int originalHash = h;
 		int lineStart = h % size;
 		final int THRESHOLD = 1000;
 		final int CACHE_LINE_SIZE = 8;
@@ -132,34 +134,38 @@ public class FastSet implements AbstractFastSet{
 				int bucketOffsetBytes = bucketOffsetLongs * LONG_SIZE_BYTES;
 				long bucketValue = unsafe.getLong(indicesBase + bucketOffsetBytes); //TODO: Maybe 'getLong' inside methods instead of passing "old" value around
 				if (isBucketEmpty(bucketValue)) {
-					if (setWritingCAS(bucketOffsetBytes, h)) {
+					if (setWritingCAS(bucketOffsetBytes, originalHash)) {
 						data[bucketOffsetLongs] = v;
-						removeWritingFlag(bucketOffsetBytes, h);
+						removeWritingFlag(bucketOffsetBytes, originalHash);
 						return false;
 					} else {
 						//cas failed, aka bucket != empty. continue.
 					}
-				} else // if( !buckets[position].isEmpty())
+				} else // if( !buckets[position].isEmpty()) 4
 				{
-					Debug.colissions.incrementAndGet();
+					//Debug.colissions.incrementAndGet();
 					bucketValue = unsafe.getLong(indicesBase + bucketOffsetBytes);
-					while (isBucketWriting(bucketValue)) {
-						bucketValue = unsafe.getLong(indicesBase + bucketOffsetBytes);
-						//TODO: compare the hashes if they are equal, only then wait (to check if data is equal when writing is finished)
-						if(!NO_LOGGING){logV("waiting...");}
+					//TODO: maybe instead of storing and comparing hashes, store and compare the index?
+					if ( (bucketValue & LONG_MASK_HASH) == (originalHash & LONG_MASK_HASH)) {
+						while (isBucketWriting(bucketValue)) {
+							bucketValue = unsafe.getLong(indicesBase + bucketOffsetBytes);
+							if(!NO_LOGGING){logV("waiting...");}
+						}
+
+						if (data[bucketOffsetLongs].equals(v)) {
+							if(!NO_LOGGING){logV("equal data found");}
+							return true;
+						} else {
+							if(!NO_LOGGING){logV(String.format("Non equal data (%s instead of %s) in bucket (%d (l), %d)", data[bucketOffsetLongs], v, bucketOffsetLongs,
+									bucketValue));}
+							// else continue probing
+						}
+					}else{
 					}
 
-					if (data[bucketOffsetLongs] == null) {
-						throw new AssertionError("bucket wasn't empty, but data related to that bucket was null");
-					}
-					if (data[bucketOffsetLongs].equals(v)) {
-						if(!NO_LOGGING){logV("equal data found");}
-						return true;
-					} else {
-						if(!NO_LOGGING){logV(String.format("Non equal data (%s instead of %s) in bucket (%d (l), %d)", data[bucketOffsetLongs], v, bucketOffsetLongs,
-								bucketValue));}
-						// else continue probing
-					}
+//					if (data[bucketOffsetLongs] == null) {
+//						throw new AssertionError("bucket wasn't empty, but data related to that bucket was null");
+//					}
 				}
 			}
 
