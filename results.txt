@@ -129,3 +129,15 @@ Result{run#=1, statespace=5242880, time=0.3610, threadCnt=1, insertedCnt=5242880
 Result{run#=2, statespace=5242880, time=0.1730, threadCnt=2, insertedCnt=5242880, speedup=2.104, relSpeedup=1.052}
 Result{run#=3, statespace=5242880, time=0.1250, threadCnt=4, insertedCnt=5242880, speedup=2.912, relSpeedup=0.728}
 Result{run#=4, statespace=5242880, time=0.1780, threadCnt=8, insertedCnt=5242880, speedup=2.045, relSpeedup=0.256}
+
+==============
+
+BEFORE inlining:
+Max memory: 5461 MB
+Free-factor: 3	 Overlap: 0.2
+Result{run#=0, statespace=12582912, time=0.9100, threadCnt=1, insertedCnt=12582912, speedup=1.000, relSpeedup=1.000}
+Result{run#=1, statespace=12582912, time=0.8070, threadCnt=1, insertedCnt=12582912, speedup=1.128, relSpeedup=1.128}
+Result{run#=2, statespace=12582912, time=0.7830, threadCnt=1, insertedCnt=12582912, speedup=1.162, relSpeedup=1.162}
+Result{run#=3, statespace=12582912, time=0.7890, threadCnt=1, insertedCnt=12582912, speedup=1.153, relSpeedup=1.153}
+Result{run#=4, statespace=12582912, time=0.8350, threadCnt=1, insertedCnt=12582912, speedup=1.090, relSpeedup=1.090}
+AFTER inlining:

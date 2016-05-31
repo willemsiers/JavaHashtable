@@ -30,6 +30,6 @@ public class HashtableWrapper implements AbstractFastSet {
 
 	@Override
 	public String toString() {
-		return map.toString();
+		return map.getClass().getCanonicalName();
 	}
 }

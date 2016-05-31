@@ -14,10 +14,10 @@ import static other.Logger.logV;
 
 public class Main {
 
-	static final int STATESPACE_SIZE = 10;
+	static final int STATESPACE_SIZE = 12*1024*1024;
 	static final float STATESPACE_OVERLAP =  0.2f;
-	static final int FREE_FACTOR = 4;
-	static final int[] THREADCOUNTS = {1,1,2,4,8};
+	static final int FREE_FACTOR = 3;
+	static final int[] THREADCOUNTS = {1,1,1,1,1};
 
 	public enum MapType {
 		FASTSET,
@@ -25,10 +25,11 @@ public class Main {
 		HASHTABLE
 	};
 
-	public static void main(String[] args) {
+	public static void main(String[] args) throws InterruptedException {
 		printMemoryMax();
-		performBenchmark(MapType.CONCURRENT_HASHMAP);
-		performBenchmark(MapType.HASHTABLE);
+		Thread.sleep(4500l);
+//		performBenchmark(MapType.CONCURRENT_HASHMAP);
+//		performBenchmark(MapType.HASHTABLE);
 		performBenchmark(MapType.FASTSET);
 	}
 
@@ -64,7 +65,7 @@ public class Main {
 				}
 
 				final int NUM_OF_THREADS = THREADCOUNTS[run]; //powers of 2
-				System.out.printf("Starting run #%d on %d threads\n", run, NUM_OF_THREADS);
+				System.out.printf("Starting run #%d on %d threads (System: %s)\n", run, NUM_OF_THREADS, BenchmarkResult.system);
 				final CyclicBarrier barrier = new CyclicBarrier(NUM_OF_THREADS + 1);
 				final Thread[] threads = new Thread[NUM_OF_THREADS];
 				int from = 0;
@@ -82,7 +83,7 @@ public class Main {
 						@Override
 						public void run() {
 							try {
-								barrier.await(10, TimeUnit.SECONDS);
+								barrier.await(180, TimeUnit.SECONDS);
 							} catch (InterruptedException | BrokenBarrierException | TimeoutException e) {
 								e.printStackTrace();
 							}
@@ -115,7 +116,7 @@ public class Main {
 				System.gc();
 				try {
 					Thread.sleep(200);
-					barrier.await(10, TimeUnit.SECONDS);
+					barrier.await(180, TimeUnit.SECONDS);
 				} catch (InterruptedException | BrokenBarrierException | TimeoutException e1) {
 					e1.printStackTrace();
 				}
@@ -162,7 +163,7 @@ public class Main {
 			System.out.println("Colisssions: " + Debug.colissions);
 			Debug.colissions.set(0);
 			System.out.printf("Benchmark results for %s at %s (System: %s)\n", BenchmarkResult.mapImplementation, new SimpleDateFormat("HH:mm yyyy-MM-dd").format(new Date()), BenchmarkResult.system);
-			System.out.println("Free-factor: " + FREE_FACTOR);
+			System.out.println("Free-factor: " + FREE_FACTOR + "\t Overlap: "+STATESPACE_OVERLAP);
 			for (BenchmarkResult result : benchmarkResults) {
 				if (result != null) {
 					System.out.println(result.toString());
