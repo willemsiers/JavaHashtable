@@ -60,7 +60,7 @@ public class Main {
 				}
 
 				BenchmarkResult.mapImplementation = s.toString();
-				Vector[] statespace = new Vector[STATESPACE_SIZE];
+				final Vector[] statespace = new Vector[STATESPACE_SIZE];
 				for (int i = 0; i < STATESPACE_SIZE; i++) {
 					statespace[i] = new Vector();
 					statespace[i].value = "w" + i;
@@ -139,9 +139,14 @@ public class Main {
 
 				int insertedCounter = 0;
 				Vector[] resultData = s.getData();
+//				HashSet<Vector> tmpSet = new HashSet<Vector>(resultData.length);
 				for (int i = 0; i < resultData.length; i++) {
 					if (resultData[i].value != null) {
 						insertedCounter++;
+//						boolean inserted = tmpSet.add(resultData[i]);
+//						if(!inserted){
+//							System.out.printf("Element %d with value %s exists!\n", i, resultData[i]);
+//						}
 					}
 					if (!Logger.NO_LOGGING) {
 						logV("data " + i + ":\t" + resultData[i]);
@@ -156,6 +161,7 @@ public class Main {
 				benchmarkResults[run].relSpeedup = benchmarkResults[run].speedup / benchmarkResults[run].num_of_threads;
 //			System.out.printf("Inserting %d vectors took %.4f seconds on %d threads. %d/%d data[] places were filled.\n", STATESPACE_SIZE, diffSeconds, NUM_OF_THREADS, insertedCounter, resultData.length);
 				if (insertedCounter != STATESPACE_SIZE) {
+					System.out.println("insertedCounter == "+insertedCounter + " STATESPACE_SIZE=="+STATESPACE_SIZE);
 					throw new AssertionError("insertedCounter != STATESPACE_SIZE");
 				}
 			}
