@@ -22,8 +22,7 @@ public class FastSet implements AbstractFastSet{
 	public final Vector[] data;
 	int size = 0;
 
-	// fset_t * fset_create (size_t key_length, size_t data_length, size_t init_size, size_t max_size)
-	public FastSet(int key_length, int init_size) {
+	public FastSet(int init_size) {
 		this.data = new Vector[init_size];
 		this.size = init_size;
 
@@ -57,19 +56,19 @@ public class FastSet implements AbstractFastSet{
 			throw new RuntimeException("FastSet was already freed");
 		}
 		this.unsafe.setMemory(indicesBase, this.size * LONG_SIZE_BYTES, (byte) 0);
-		for (int i = 0; i < data.length; i++) {
+		for (int i = 0; i < data.length; i++) { //slow, but effective
 			data[i] = new Vector();
 		}
 //        Arrays.fill(data, null);
 	}
 
-	/**
-	 * Based on s[0]*31^(n-1) + s[1]*31^(n-2) + ... + s[n-1]
-	 **/
 	public static  int stringHash(String s, int iteration) {
 		return s.hashCode() * iteration;
 
 		// TODO: better hash function
+		/**
+		 * Based on s[0]*31^(n-1) + s[1]*31^(n-2) + ... + s[n-1]
+		 **/
 //		int hash = 0;
 //		int prime = Primes.primes[iteration + 10];
 //		int length = s.length();
@@ -103,6 +102,7 @@ public class FastSet implements AbstractFastSet{
 	}
 
 	public  void removeWritingFlag(int bucketOffsetBytes, int hashValue) {
+		//Should be called after setWritingCAS has succeeded, and data was written.
 		if (false) {//temp assertion
 			long expected = hashValue | LONG_MASK_WRITING | LONG_MASK_OCCUPIED;
 			long actual = unsafe.getLong(indicesBase + bucketOffsetBytes);
@@ -115,17 +115,21 @@ public class FastSet implements AbstractFastSet{
 		unsafe.putLong(indicesBase + bucketOffsetBytes, newValue);
 	}
 
+	/**
+	 * @Return true if v was found. false if v was not found, but it was inserted
+	 */
 	@Override
-	public boolean findOrPut(Vector v, boolean insertAbsent) {
+	public boolean findOrPut(Vector v) {
 		if(cleaned_up){
 			throw new RuntimeException("FastSet was already freed");
 		}
+		final int THRESHOLD = 1000; //How many times to rehash before giving up
+		final int CACHE_LINE_SIZE = 8;
 		int count = 1;
 		int h = Math.abs(stringHash(v.value, count));
-		final int originalHash = h;
-		int lineStart = h % size;
-		final int THRESHOLD = 1000;
-		final int CACHE_LINE_SIZE = 8;
+		final int originalHash = h; //Will be stored in the bucket (indices buffer)
+		int lineStart = h % size;   //Where to start probing
+
 
 		boolean found = false;
 		while (count < THRESHOLD) {

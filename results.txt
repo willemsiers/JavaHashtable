@@ -154,3 +154,19 @@ Result{run#=1, statespace=12582912, time=0.8040, threadCnt=1, insertedCnt=125829
 Result{run#=2, statespace=12582912, time=0.7640, threadCnt=1, insertedCnt=12582912, speedup=1.106, relSpeedup=1.106}
 Result{run#=3, statespace=12582912, time=0.7650, threadCnt=1, insertedCnt=12582912, speedup=1.105, relSpeedup=1.105}
 Result{run#=4, statespace=12582912, time=0.8290, threadCnt=1, insertedCnt=12582912, speedup=1.019, relSpeedup=1.019}
+
+=========
+Virtual dispatch find-or-put:
+Free-factor: 3	 Overlap: 0.2
+Result{run#=0, statespace=12582912, time=0.7710, threadCnt=1, insertedCnt=12582912, speedup=1.000, relSpeedup=1.000}
+Result{run#=1, statespace=12582912, time=0.7800, threadCnt=1, insertedCnt=12582912, speedup=0.988, relSpeedup=0.988}
+Result{run#=2, statespace=12582912, time=0.7670, threadCnt=1, insertedCnt=12582912, speedup=1.005, relSpeedup=1.005}
+Result{run#=3, statespace=12582912, time=0.7900, threadCnt=1, insertedCnt=12582912, speedup=0.976, relSpeedup=0.976}
+Result{run#=4, statespace=12582912, time=0.7610, threadCnt=1, insertedCnt=12582912, speedup=1.013, relSpeedup=1.013}
+Non-virtual dispatch (!!):
+Free-factor: 3	 Overlap: 0.2
+Result{run#=0, statespace=11534336, time=0.7830, threadCnt=1, insertedCnt=11534336, speedup=1.000, relSpeedup=1.000}
+Result{run#=1, statespace=11534336, time=0.6780, threadCnt=1, insertedCnt=11534336, speedup=1.155, relSpeedup=1.155}
+Result{run#=2, statespace=11534336, time=0.7470, threadCnt=1, insertedCnt=11534336, speedup=1.048, relSpeedup=1.048}
+Result{run#=3, statespace=11534336, time=0.6970, threadCnt=1, insertedCnt=11534336, speedup=1.123, relSpeedup=1.123}
+Result{run#=4, statespace=11534336, time=0.6770, threadCnt=1, insertedCnt=11534336, speedup=1.157, relSpeedup=1.157}

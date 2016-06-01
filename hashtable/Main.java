@@ -9,15 +9,18 @@ import java.text.SimpleDateFormat;
 import java.util.*;
 import java.util.concurrent.*;
 
-import static other.Logger.logE;
 import static other.Logger.logV;
 
+//NOTE: run with jvm arguments to increase heap size if necessary, for example: -Xms512m -Xmx6g
 public class Main {
 
-	static final int STATESPACE_SIZE = 12*1024*1024;
-	static final float STATESPACE_OVERLAP =  0.2f;
+	//Total insertion attempts will be STATESPACE_SIZE * STATESPACE_OVERLAP, where STATESPACE_SIZE insertions have "unique" data
+	static final int STATESPACE_SIZE = 2*1024*1024;
+	static final float STATESPACE_OVERLAP =  0.1f;
+	//FREE_FACTOR: how much to over-allocate in the hashtable (determines load-factor)
 	static final int FREE_FACTOR = 3;
-	static final int[] THREADCOUNTS = {1,1,1,1,1};
+	//THREADCOUNTS: for each entry a benchmark will be performed using this many threads
+	static final int[] THREADCOUNTS = {1,2,4};
 
 	public enum MapType {
 		FASTSET,
@@ -27,9 +30,8 @@ public class Main {
 
 	public static void main(String[] args) throws InterruptedException {
 		printMemoryMax();
-		Thread.sleep(4500l);
-//		performBenchmark(MapType.CONCURRENT_HASHMAP);
-//		performBenchmark(MapType.HASHTABLE);
+		performBenchmark(MapType.CONCURRENT_HASHMAP);
+		performBenchmark(MapType.HASHTABLE);
 		performBenchmark(MapType.FASTSET);
 	}
 
@@ -41,11 +43,11 @@ public class Main {
 		BenchmarkResult.system = hostname;
 		try{
 			for (int run = 0; run < THREADCOUNTS.length; run++) {
-				final AbstractFastSet s;
+				final AbstractFastSet s; //Note: virtual dispatch appears to be slightly slower
 
 				switch (MAP_TYPE) {
 					case FASTSET:
-						s = new FastSet(1, STATESPACE_SIZE * FREE_FACTOR);
+						s = new FastSet(STATESPACE_SIZE * FREE_FACTOR);
 						break;
 					case CONCURRENT_HASHMAP:
 						s = new HashtableWrapper(new ConcurrentHashMap<Vector, Vector>(STATESPACE_SIZE * FREE_FACTOR));
@@ -90,7 +92,7 @@ public class Main {
 							logV("starting thread-" + Thread.currentThread().getName());
 
 							for (int i = 0; i < workSize; i++) {
-								boolean found = s.findOrPut(unprocessed[i], true); // if false, data is put
+								boolean found = s.findOrPut(unprocessed[i]); // if false, data is put
 								if (!Logger.NO_LOGGING) {
 									logV("found:" + found + " for " + unprocessed[i].toString());
 								}

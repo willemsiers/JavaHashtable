@@ -1,7 +1,7 @@
 package hashtable;
 
 public interface AbstractFastSet {
-	boolean findOrPut(Vector v, boolean insertAbsent);
+	boolean findOrPut(Vector v);
 
 	Vector[] getData();
 

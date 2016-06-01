@@ -2,6 +2,9 @@ package hashtable;
 
 import java.util.Map;
 
+/**
+ * Wraps java.util.Map implementations in the same interface as FastSet
+ */
 public class HashtableWrapper implements AbstractFastSet {
 
 	private final Map<Vector, Vector> map;
@@ -11,7 +14,7 @@ public class HashtableWrapper implements AbstractFastSet {
 	}
 
 	@Override
-	public boolean findOrPut(Vector v, boolean insertAbsent) {
+	public boolean findOrPut(Vector v) {
 		boolean found = false;
 		found = (map.putIfAbsent(v,v) != null);
 		return found;
