@@ -364,3 +364,226 @@ run#=8	threadCnt=4	time=0.6400	statespace=4194304	insertedCnt=4194304	speedup=0.
 run#=9	threadCnt=8	time=1.2310	statespace=4194304	insertedCnt=4194304	speedup=0.431	relSpeedup=0.054
 run#=10	threadCnt=8	time=1.3610	statespace=4194304	insertedCnt=4194304	speedup=0.389	relSpeedup=0.049
 run#=11	threadCnt=8	time=1.3780	statespace=4194304	insertedCnt=4194304	speedup=0.385	relSpeedup=0.048
+
+=== Met putifabsent:
+Starting run #0 on 1 threads (System: willem-3570R-370R-470R-450R-510R-4450RV)
+Free:414MB	Total619MB	Max5461MB
+Starting run #1 on 1 threads (System: willem-3570R-370R-470R-450R-510R-4450RV)
+Free:561MB	Total766MB	Max5461MB
+Starting run #2 on 1 threads (System: willem-3570R-370R-470R-450R-510R-4450RV)
+Free:579MB	Total787MB	Max5461MB
+Starting run #3 on 2 threads (System: willem-3570R-370R-470R-450R-510R-4450RV)
+Free:532MB	Total787MB	Max5461MB
+Starting run #4 on 2 threads (System: willem-3570R-370R-470R-450R-510R-4450RV)
+Free:533MB	Total787MB	Max5461MB
+Starting run #5 on 2 threads (System: willem-3570R-370R-470R-450R-510R-4450RV)
+Free:513MB	Total766MB	Max5461MB
+Starting run #6 on 4 threads (System: willem-3570R-370R-470R-450R-510R-4450RV)
+Free:1013MB	Total1367MB	Max5461MB
+Starting run #7 on 4 threads (System: willem-3570R-370R-470R-450R-510R-4450RV)
+Free:1034MB	Total1387MB	Max5461MB
+Starting run #8 on 4 threads (System: willem-3570R-370R-470R-450R-510R-4450RV)
+Free:1035MB	Total1387MB	Max5461MB
+Starting run #9 on 8 threads (System: willem-3570R-370R-470R-450R-510R-4450RV)
+Free:1342MB	Total1905MB	Max5461MB
+Starting run #10 on 8 threads (System: willem-3570R-370R-470R-450R-510R-4450RV)
+Free:1823MB	Total2401MB	Max5461MB
+Starting run #11 on 8 threads (System: willem-3570R-370R-470R-450R-510R-4450RV)
+Free:1841MB	Total2418MB	Max5461MB
+Colisssions: 0
+Benchmark results for FastSet at 11:58 2016-06-03 (System: willem-3570R-370R-470R-450R-510R-4450RV)
+Free-factor: 2	 Overlap: 10.0
+run#=0	threadCnt=1	time=0.4810	statespace=1048576	insertedCnt=1048576	speedup=1.000	relSpeedup=1.000
+run#=1	threadCnt=1	time=0.4660	statespace=1048576	insertedCnt=1048576	speedup=1.032	relSpeedup=1.032
+run#=2	threadCnt=1	time=0.5090	statespace=1048576	insertedCnt=1048576	speedup=0.945	relSpeedup=0.945
+run#=3	threadCnt=2	time=0.4960	statespace=1048576	insertedCnt=1048576	speedup=0.970	relSpeedup=0.485
+run#=4	threadCnt=2	time=0.4240	statespace=1048576	insertedCnt=1048576	speedup=1.134	relSpeedup=0.567
+run#=5	threadCnt=2	time=0.4840	statespace=1048576	insertedCnt=1048576	speedup=0.994	relSpeedup=0.497
+run#=6	threadCnt=4	time=0.9020	statespace=1048576	insertedCnt=1048576	speedup=0.533	relSpeedup=0.133
+run#=7	threadCnt=4	time=1.0260	statespace=1048576	insertedCnt=1048576	speedup=0.469	relSpeedup=0.117
+run#=8	threadCnt=4	time=1.0350	statespace=1048576	insertedCnt=1048576	speedup=0.465	relSpeedup=0.116
+run#=9	threadCnt=8	time=1.7500	statespace=1048576	insertedCnt=1048576	speedup=0.275	relSpeedup=0.034
+run#=10	threadCnt=8	time=1.8100	statespace=1048576	insertedCnt=1048576	speedup=0.266	relSpeedup=0.033
+run#=11	threadCnt=8	time=1.4770	statespace=1048576	insertedCnt=1048576	speedup=0.326	relSpeedup=0.041
+
+Benchmark results for org.cliffc.high_scale_lib.NonBlockingHashMap at 12:00 2016-06-03 (System: willem-3570R-370R-470R-450R-510R-4450RV)
+Free-factor: 2	 Overlap: 10.0
+run#=0	threadCnt=1	time=1.0290	statespace=1048576	insertedCnt=1048576	speedup=1.000	relSpeedup=1.000
+run#=1	threadCnt=1	time=1.0020	statespace=1048576	insertedCnt=1048576	speedup=1.027	relSpeedup=1.027
+run#=2	threadCnt=1	time=0.9520	statespace=1048576	insertedCnt=1048576	speedup=1.081	relSpeedup=1.081
+run#=3	threadCnt=2	time=1.0460	statespace=1048576	insertedCnt=1048576	speedup=0.984	relSpeedup=0.492
+run#=4	threadCnt=2	time=0.9830	statespace=1048576	insertedCnt=1048576	speedup=1.047	relSpeedup=0.523
+run#=5	threadCnt=2	time=1.1300	statespace=1048576	insertedCnt=1048576	speedup=0.911	relSpeedup=0.455
+run#=6	threadCnt=4	time=2.0600	statespace=1048576	insertedCnt=1048576	speedup=0.500	relSpeedup=0.125
+run#=7	threadCnt=4	time=1.5320	statespace=1048576	insertedCnt=1048576	speedup=0.672	relSpeedup=0.168
+run#=8	threadCnt=4	time=1.6830	statespace=1048576	insertedCnt=1048576	speedup=0.611	relSpeedup=0.153
+run#=9	threadCnt=8	time=3.4750	statespace=1048576	insertedCnt=1048576	speedup=0.296	relSpeedup=0.037
+run#=10	threadCnt=8	time=3.6710	statespace=1048576	insertedCnt=1048576	speedup=0.280	relSpeedup=0.035
+run#=11	threadCnt=8	time=3.4450	statespace=1048576	insertedCnt=1048576	speedup=0.299	relSpeedup=0.037
+
+========================================== more results
+
+/usr/lib/jvm/java-8-openjdk-amd64/bin/java -Dvisualvm.id=1489483744859 -Xms512m -Xmx6g -Didea.launcher.port=7532 -Didea.launcher.bin.path=/home/willem/Programs/idea-IU-145.972.3/bin -Dfile.encoding=UTF-8 -classpath /home/willem/dev/fast_set_java/bin:/usr/lib/jvm/java-8-openjdk-amd64/jre/lib/charsets.jar:/usr/lib/jvm/java-8-openjdk-amd64/jre/lib/ext/cldrdata.jar:/usr/lib/jvm/java-8-openjdk-amd64/jre/lib/ext/dnsns.jar:/usr/lib/jvm/java-8-openjdk-amd64/jre/lib/ext/icedtea-sound.jar:/usr/lib/jvm/java-8-openjdk-amd64/jre/lib/ext/jaccess.jar:/usr/lib/jvm/java-8-openjdk-amd64/jre/lib/ext/localedata.jar:/usr/lib/jvm/java-8-openjdk-amd64/jre/lib/ext/nashorn.jar:/usr/lib/jvm/java-8-openjdk-amd64/jre/lib/ext/sunec.jar:/usr/lib/jvm/java-8-openjdk-amd64/jre/lib/ext/sunjce_provider.jar:/usr/lib/jvm/java-8-openjdk-amd64/jre/lib/ext/sunpkcs11.jar:/usr/lib/jvm/java-8-openjdk-amd64/jre/lib/ext/zipfs.jar:/usr/lib/jvm/java-8-openjdk-amd64/jre/lib/jce.jar:/usr/lib/jvm/java-8-openjdk-amd64/jre/lib/jsse.jar:/usr/lib/jvm/java-8-openjdk-amd64/jre/lib/management-agent.jar:/usr/lib/jvm/java-8-openjdk-amd64/jre/lib/resources.jar:/usr/lib/jvm/java-8-openjdk-amd64/jre/lib/rt.jar:/home/willem/Programs/idea-IU-145.972.3/lib/junit-4.12.jar:/usr/share/java/hamcrest-core.jar:/home/willem/Programs/idea-IU-145.972.3/lib/idea_rt.jar com.intellij.rt.execution.application.AppMain hashtable.Main
+Max memory: 5461 MB
+Starting benchmarks with FREE_FACTOR: 2
+Benchmark results for FastSet at 13:59 2016-06-03 (System: willem-3570R-370R-470R-450R-510R-4450RV)
+Free-factor: 2	 Overlap: 1.0
+run#=0	threadCnt=1	time=0.0600	statespace=262144	insertedCnt=262144	speedup=0.333	relSpeedup=0.333
+run#=1	threadCnt=1	time=0.0290	statespace=262144	insertedCnt=262144	speedup=0.690	relSpeedup=0.690
+run#=2	threadCnt=1	time=0.0200	statespace=262144	insertedCnt=262144	speedup=1.000	relSpeedup=1.000
+run#=3	threadCnt=2	time=0.0280	statespace=262144	insertedCnt=262144	speedup=0.714	relSpeedup=0.357
+run#=4	threadCnt=2	time=0.0380	statespace=262144	insertedCnt=262144	speedup=0.526	relSpeedup=0.263
+run#=5	threadCnt=2	time=0.0600	statespace=262144	insertedCnt=262144	speedup=0.333	relSpeedup=0.167
+run#=6	threadCnt=4	time=0.0440	statespace=262144	insertedCnt=262144	speedup=0.455	relSpeedup=0.114
+run#=7	threadCnt=4	time=0.0420	statespace=262144	insertedCnt=262144	speedup=0.476	relSpeedup=0.119
+run#=8	threadCnt=4	time=0.0400	statespace=262144	insertedCnt=262144	speedup=0.500	relSpeedup=0.125
+run#=9	threadCnt=8	time=0.0920	statespace=262144	insertedCnt=262144	speedup=0.217	relSpeedup=0.027
+run#=10	threadCnt=8	time=0.0750	statespace=262144	insertedCnt=262144	speedup=0.267	relSpeedup=0.033
+run#=11	threadCnt=8	time=0.0570	statespace=262144	insertedCnt=262144	speedup=0.351	relSpeedup=0.044
+run#=12	threadCnt=16	time=0.0950	statespace=262144	insertedCnt=262144	speedup=0.211	relSpeedup=0.013
+run#=13	threadCnt=16	time=0.1240	statespace=262144	insertedCnt=262144	speedup=0.161	relSpeedup=0.010
+run#=14	threadCnt=16	time=0.0850	statespace=262144	insertedCnt=262144	speedup=0.235	relSpeedup=0.015
+run#=15	threadCnt=32	time=0.1440	statespace=262144	insertedCnt=262144	speedup=0.139	relSpeedup=0.004
+run#=16	threadCnt=32	time=0.1760	statespace=262144	insertedCnt=262144	speedup=0.114	relSpeedup=0.004
+run#=17	threadCnt=32	time=0.1810	statespace=262144	insertedCnt=262144	speedup=0.110	relSpeedup=0.003
+Benchmark results for java.util.concurrent.ConcurrentHashMap at 14:00 2016-06-03 (System: willem-3570R-370R-470R-450R-510R-4450RV)
+Free-factor: 2	 Overlap: 1.0
+run#=0	threadCnt=1	time=0.0740	statespace=262144	insertedCnt=262144	speedup=0.595	relSpeedup=0.595
+run#=1	threadCnt=1	time=0.0440	statespace=262144	insertedCnt=262144	speedup=1.000	relSpeedup=1.000
+run#=2	threadCnt=1	time=0.0440	statespace=262144	insertedCnt=262144	speedup=1.000	relSpeedup=1.000
+run#=3	threadCnt=2	time=0.0770	statespace=262144	insertedCnt=262144	speedup=0.571	relSpeedup=0.286
+run#=4	threadCnt=2	time=0.0330	statespace=262144	insertedCnt=262144	speedup=1.333	relSpeedup=0.667
+run#=5	threadCnt=2	time=0.0490	statespace=262144	insertedCnt=262144	speedup=0.898	relSpeedup=0.449
+run#=6	threadCnt=4	time=0.0920	statespace=262144	insertedCnt=262144	speedup=0.478	relSpeedup=0.120
+run#=7	threadCnt=4	time=0.0460	statespace=262144	insertedCnt=262144	speedup=0.957	relSpeedup=0.239
+run#=8	threadCnt=4	time=0.0470	statespace=262144	insertedCnt=262144	speedup=0.936	relSpeedup=0.234
+run#=9	threadCnt=8	time=0.0850	statespace=262144	insertedCnt=262144	speedup=0.518	relSpeedup=0.065
+run#=10	threadCnt=8	time=0.0770	statespace=262144	insertedCnt=262144	speedup=0.571	relSpeedup=0.071
+run#=11	threadCnt=8	time=0.1310	statespace=262144	insertedCnt=262144	speedup=0.336	relSpeedup=0.042
+run#=12	threadCnt=16	time=0.1750	statespace=262144	insertedCnt=262144	speedup=0.251	relSpeedup=0.016
+run#=13	threadCnt=16	time=0.1220	statespace=262144	insertedCnt=262144	speedup=0.361	relSpeedup=0.023
+run#=14	threadCnt=16	time=0.1380	statespace=262144	insertedCnt=262144	speedup=0.319	relSpeedup=0.020
+run#=15	threadCnt=32	time=0.1980	statespace=262144	insertedCnt=262144	speedup=0.222	relSpeedup=0.007
+run#=16	threadCnt=32	time=0.2050	statespace=262144	insertedCnt=262144	speedup=0.215	relSpeedup=0.007
+run#=17	threadCnt=32	time=0.1940	statespace=262144	insertedCnt=262144	speedup=0.227	relSpeedup=0.007
+Benchmark results for java.util.Hashtable at 14:01 2016-06-03 (System: willem-3570R-370R-470R-450R-510R-4450RV)
+Free-factor: 2	 Overlap: 1.0
+run#=0	threadCnt=1	time=0.0680	statespace=262144	insertedCnt=262144	speedup=0.426	relSpeedup=0.426
+run#=1	threadCnt=1	time=0.0310	statespace=262144	insertedCnt=262144	speedup=0.935	relSpeedup=0.935
+run#=2	threadCnt=1	time=0.0290	statespace=262144	insertedCnt=262144	speedup=1.000	relSpeedup=1.000
+run#=3	threadCnt=2	time=0.1130	statespace=262144	insertedCnt=262144	speedup=0.257	relSpeedup=0.128
+run#=4	threadCnt=2	time=0.1150	statespace=262144	insertedCnt=262144	speedup=0.252	relSpeedup=0.126
+run#=5	threadCnt=2	time=0.1130	statespace=262144	insertedCnt=262144	speedup=0.257	relSpeedup=0.128
+run#=6	threadCnt=4	time=0.1800	statespace=262144	insertedCnt=262144	speedup=0.161	relSpeedup=0.040
+run#=7	threadCnt=4	time=0.1690	statespace=262144	insertedCnt=262144	speedup=0.172	relSpeedup=0.043
+run#=8	threadCnt=4	time=0.1930	statespace=262144	insertedCnt=262144	speedup=0.150	relSpeedup=0.038
+run#=9	threadCnt=8	time=0.1540	statespace=262144	insertedCnt=262144	speedup=0.188	relSpeedup=0.024
+run#=10	threadCnt=8	time=0.1910	statespace=262144	insertedCnt=262144	speedup=0.152	relSpeedup=0.019
+run#=11	threadCnt=8	time=0.1940	statespace=262144	insertedCnt=262144	speedup=0.149	relSpeedup=0.019
+run#=12	threadCnt=16	time=0.2610	statespace=262144	insertedCnt=262144	speedup=0.111	relSpeedup=0.007
+run#=13	threadCnt=16	time=0.2480	statespace=262144	insertedCnt=262144	speedup=0.117	relSpeedup=0.007
+run#=14	threadCnt=16	time=0.2500	statespace=262144	insertedCnt=262144	speedup=0.116	relSpeedup=0.007
+run#=15	threadCnt=32	time=0.4310	statespace=262144	insertedCnt=262144	speedup=0.067	relSpeedup=0.002
+run#=16	threadCnt=32	time=0.3780	statespace=262144	insertedCnt=262144	speedup=0.077	relSpeedup=0.002
+run#=17	threadCnt=32	time=0.3800	statespace=262144	insertedCnt=262144	speedup=0.076	relSpeedup=0.002
+Benchmark results for org.cliffc.high_scale_lib.NonBlockingHashMap at 14:02 2016-06-03 (System: willem-3570R-370R-470R-450R-510R-4450RV)
+Free-factor: 2	 Overlap: 1.0
+run#=0	threadCnt=1	time=0.1060	statespace=262144	insertedCnt=262144	speedup=1.028	relSpeedup=1.028
+run#=1	threadCnt=1	time=0.1090	statespace=262144	insertedCnt=262144	speedup=1.000	relSpeedup=1.000
+run#=2	threadCnt=1	time=0.1090	statespace=262144	insertedCnt=262144	speedup=1.000	relSpeedup=1.000
+run#=3	threadCnt=2	time=0.1290	statespace=262144	insertedCnt=262144	speedup=0.845	relSpeedup=0.422
+run#=4	threadCnt=2	time=0.1250	statespace=262144	insertedCnt=262144	speedup=0.872	relSpeedup=0.436
+run#=5	threadCnt=2	time=0.0940	statespace=262144	insertedCnt=262144	speedup=1.160	relSpeedup=0.580
+run#=6	threadCnt=4	time=0.1420	statespace=262144	insertedCnt=262144	speedup=0.768	relSpeedup=0.192
+run#=7	threadCnt=4	time=0.0820	statespace=262144	insertedCnt=262144	speedup=1.329	relSpeedup=0.332
+run#=8	threadCnt=4	time=0.0860	statespace=262144	insertedCnt=262144	speedup=1.267	relSpeedup=0.317
+run#=9	threadCnt=8	time=0.1280	statespace=262144	insertedCnt=262144	speedup=0.852	relSpeedup=0.106
+run#=10	threadCnt=8	time=0.1900	statespace=262144	insertedCnt=262144	speedup=0.574	relSpeedup=0.072
+run#=11	threadCnt=8	time=0.1230	statespace=262144	insertedCnt=262144	speedup=0.886	relSpeedup=0.111
+run#=12	threadCnt=16	time=0.2240	statespace=262144	insertedCnt=262144	speedup=0.487	relSpeedup=0.030
+run#=13	threadCnt=16	time=0.2320	statespace=262144	insertedCnt=262144	speedup=0.470	relSpeedup=0.029
+run#=14	threadCnt=16	time=0.2140	statespace=262144	insertedCnt=262144	speedup=0.509	relSpeedup=0.032
+run#=15	threadCnt=32	time=0.3920	statespace=262144	insertedCnt=262144	speedup=0.278	relSpeedup=0.009
+run#=16	threadCnt=32	time=0.2690	statespace=262144	insertedCnt=262144	speedup=0.405	relSpeedup=0.013
+run#=17	threadCnt=32	time=0.3970	statespace=262144	insertedCnt=262144	speedup=0.275	relSpeedup=0.009
+Starting benchmarks with FREE_FACTOR: 4
+Benchmark results for FastSet at 14:03 2016-06-03 (System: willem-3570R-370R-470R-450R-510R-4450RV)
+Free-factor: 4	 Overlap: 1.0
+run#=0	threadCnt=1	time=0.0340	statespace=262144	insertedCnt=262144	speedup=1.000	relSpeedup=1.000
+run#=1	threadCnt=1	time=0.0330	statespace=262144	insertedCnt=262144	speedup=1.030	relSpeedup=1.030
+run#=2	threadCnt=1	time=0.0340	statespace=262144	insertedCnt=262144	speedup=1.000	relSpeedup=1.000
+run#=3	threadCnt=2	time=0.0380	statespace=262144	insertedCnt=262144	speedup=0.895	relSpeedup=0.447
+run#=4	threadCnt=2	time=0.0380	statespace=262144	insertedCnt=262144	speedup=0.895	relSpeedup=0.447
+run#=5	threadCnt=2	time=0.0380	statespace=262144	insertedCnt=262144	speedup=0.895	relSpeedup=0.447
+run#=6	threadCnt=4	time=0.0290	statespace=262144	insertedCnt=262144	speedup=1.172	relSpeedup=0.293
+run#=7	threadCnt=4	time=0.0320	statespace=262144	insertedCnt=262144	speedup=1.063	relSpeedup=0.266
+run#=8	threadCnt=4	time=0.0300	statespace=262144	insertedCnt=262144	speedup=1.133	relSpeedup=0.283
+run#=9	threadCnt=8	time=0.0500	statespace=262144	insertedCnt=262144	speedup=0.680	relSpeedup=0.085
+run#=10	threadCnt=8	time=0.0560	statespace=262144	insertedCnt=262144	speedup=0.607	relSpeedup=0.076
+run#=11	threadCnt=8	time=0.0470	statespace=262144	insertedCnt=262144	speedup=0.723	relSpeedup=0.090
+run#=12	threadCnt=16	time=0.0830	statespace=262144	insertedCnt=262144	speedup=0.410	relSpeedup=0.026
+run#=13	threadCnt=16	time=0.1080	statespace=262144	insertedCnt=262144	speedup=0.315	relSpeedup=0.020
+run#=14	threadCnt=16	time=0.0960	statespace=262144	insertedCnt=262144	speedup=0.354	relSpeedup=0.022
+run#=15	threadCnt=32	time=0.1450	statespace=262144	insertedCnt=262144	speedup=0.234	relSpeedup=0.007
+run#=16	threadCnt=32	time=0.2100	statespace=262144	insertedCnt=262144	speedup=0.162	relSpeedup=0.005
+run#=17	threadCnt=32	time=0.1410	statespace=262144	insertedCnt=262144	speedup=0.241	relSpeedup=0.008
+Benchmark results for java.util.concurrent.ConcurrentHashMap at 14:03 2016-06-03 (System: willem-3570R-370R-470R-450R-510R-4450RV)
+Free-factor: 4	 Overlap: 1.0
+run#=0	threadCnt=1	time=0.0490	statespace=262144	insertedCnt=262144	speedup=1.000	relSpeedup=1.000
+run#=1	threadCnt=1	time=0.0490	statespace=262144	insertedCnt=262144	speedup=1.000	relSpeedup=1.000
+run#=2	threadCnt=1	time=0.0490	statespace=262144	insertedCnt=262144	speedup=1.000	relSpeedup=1.000
+run#=3	threadCnt=2	time=0.0390	statespace=262144	insertedCnt=262144	speedup=1.256	relSpeedup=0.628
+run#=4	threadCnt=2	time=0.0400	statespace=262144	insertedCnt=262144	speedup=1.225	relSpeedup=0.612
+run#=5	threadCnt=2	time=0.0390	statespace=262144	insertedCnt=262144	speedup=1.256	relSpeedup=0.628
+run#=6	threadCnt=4	time=0.0460	statespace=262144	insertedCnt=262144	speedup=1.065	relSpeedup=0.266
+run#=7	threadCnt=4	time=0.0510	statespace=262144	insertedCnt=262144	speedup=0.961	relSpeedup=0.240
+run#=8	threadCnt=4	time=0.0500	statespace=262144	insertedCnt=262144	speedup=0.980	relSpeedup=0.245
+run#=9	threadCnt=8	time=0.0780	statespace=262144	insertedCnt=262144	speedup=0.628	relSpeedup=0.079
+run#=10	threadCnt=8	time=0.0710	statespace=262144	insertedCnt=262144	speedup=0.690	relSpeedup=0.086
+run#=11	threadCnt=8	time=0.0860	statespace=262144	insertedCnt=262144	speedup=0.570	relSpeedup=0.071
+run#=12	threadCnt=16	time=0.1240	statespace=262144	insertedCnt=262144	speedup=0.395	relSpeedup=0.025
+run#=13	threadCnt=16	time=0.1300	statespace=262144	insertedCnt=262144	speedup=0.377	relSpeedup=0.024
+run#=14	threadCnt=16	time=0.1380	statespace=262144	insertedCnt=262144	speedup=0.355	relSpeedup=0.022
+run#=15	threadCnt=32	time=0.2170	statespace=262144	insertedCnt=262144	speedup=0.226	relSpeedup=0.007
+run#=16	threadCnt=32	time=0.2150	statespace=262144	insertedCnt=262144	speedup=0.228	relSpeedup=0.007
+run#=17	threadCnt=32	time=0.2100	statespace=262144	insertedCnt=262144	speedup=0.233	relSpeedup=0.007
+Benchmark results for java.util.Hashtable at 14:04 2016-06-03 (System: willem-3570R-370R-470R-450R-510R-4450RV)
+Free-factor: 4	 Overlap: 1.0
+run#=0	threadCnt=1	time=0.0320	statespace=262144	insertedCnt=262144	speedup=0.969	relSpeedup=0.969
+run#=1	threadCnt=1	time=0.0360	statespace=262144	insertedCnt=262144	speedup=0.861	relSpeedup=0.861
+run#=2	threadCnt=1	time=0.0310	statespace=262144	insertedCnt=262144	speedup=1.000	relSpeedup=1.000
+run#=3	threadCnt=2	time=0.0780	statespace=262144	insertedCnt=262144	speedup=0.397	relSpeedup=0.199
+run#=4	threadCnt=2	time=0.1180	statespace=262144	insertedCnt=262144	speedup=0.263	relSpeedup=0.131
+run#=5	threadCnt=2	time=0.1110	statespace=262144	insertedCnt=262144	speedup=0.279	relSpeedup=0.140
+run#=6	threadCnt=4	time=0.1490	statespace=262144	insertedCnt=262144	speedup=0.208	relSpeedup=0.052
+run#=7	threadCnt=4	time=0.1500	statespace=262144	insertedCnt=262144	speedup=0.207	relSpeedup=0.052
+run#=8	threadCnt=4	time=0.1420	statespace=262144	insertedCnt=262144	speedup=0.218	relSpeedup=0.055
+run#=9	threadCnt=8	time=0.1440	statespace=262144	insertedCnt=262144	speedup=0.215	relSpeedup=0.027
+run#=10	threadCnt=8	time=0.1670	statespace=262144	insertedCnt=262144	speedup=0.186	relSpeedup=0.023
+run#=11	threadCnt=8	time=0.1740	statespace=262144	insertedCnt=262144	speedup=0.178	relSpeedup=0.022
+run#=12	threadCnt=16	time=0.2110	statespace=262144	insertedCnt=262144	speedup=0.147	relSpeedup=0.009
+run#=13	threadCnt=16	time=0.2470	statespace=262144	insertedCnt=262144	speedup=0.126	relSpeedup=0.008
+run#=14	threadCnt=16	time=0.2310	statespace=262144	insertedCnt=262144	speedup=0.134	relSpeedup=0.008
+run#=15	threadCnt=32	time=0.3940	statespace=262144	insertedCnt=262144	speedup=0.079	relSpeedup=0.002
+run#=16	threadCnt=32	time=0.4270	statespace=262144	insertedCnt=262144	speedup=0.073	relSpeedup=0.002
+run#=17	threadCnt=32	time=0.4430	statespace=262144	insertedCnt=262144	speedup=0.070	relSpeedup=0.002
+Benchmark results for org.cliffc.high_scale_lib.NonBlockingHashMap at 14:05 2016-06-03 (System: willem-3570R-370R-470R-450R-510R-4450RV)
+Free-factor: 4	 Overlap: 1.0
+run#=0	threadCnt=1	time=0.0740	statespace=262144	insertedCnt=262144	speedup=1.027	relSpeedup=1.027
+run#=1	threadCnt=1	time=0.0750	statespace=262144	insertedCnt=262144	speedup=1.013	relSpeedup=1.013
+run#=2	threadCnt=1	time=0.0760	statespace=262144	insertedCnt=262144	speedup=1.000	relSpeedup=1.000
+run#=3	threadCnt=2	time=0.0670	statespace=262144	insertedCnt=262144	speedup=1.134	relSpeedup=0.567
+run#=4	threadCnt=2	time=0.0670	statespace=262144	insertedCnt=262144	speedup=1.134	relSpeedup=0.567
+run#=5	threadCnt=2	time=0.0940	statespace=262144	insertedCnt=262144	speedup=0.809	relSpeedup=0.404
+run#=6	threadCnt=4	time=0.0780	statespace=262144	insertedCnt=262144	speedup=0.974	relSpeedup=0.244
+run#=7	threadCnt=4	time=0.0870	statespace=262144	insertedCnt=262144	speedup=0.874	relSpeedup=0.218
+run#=8	threadCnt=4	time=0.0700	statespace=262144	insertedCnt=262144	speedup=1.086	relSpeedup=0.271
+run#=9	threadCnt=8	time=0.1110	statespace=262144	insertedCnt=262144	speedup=0.685	relSpeedup=0.086
+run#=10	threadCnt=8	time=0.1340	statespace=262144	insertedCnt=262144	speedup=0.567	relSpeedup=0.071
+run#=11	threadCnt=8	time=0.1490	statespace=262144	insertedCnt=262144	speedup=0.510	relSpeedup=0.064
+run#=12	threadCnt=16	time=0.2350	statespace=262144	insertedCnt=262144	speedup=0.323	relSpeedup=0.020
+run#=13	threadCnt=16	time=0.1950	statespace=262144	insertedCnt=262144	speedup=0.390	relSpeedup=0.024
+run#=14	threadCnt=16	time=0.2180	statespace=262144	insertedCnt=262144	speedup=0.349	relSpeedup=0.022
+run#=15	threadCnt=32	time=0.3720	statespace=262144	insertedCnt=262144	speedup=0.204	relSpeedup=0.006
+run#=16	threadCnt=32	time=0.3800	statespace=262144	insertedCnt=262144	speedup=0.200	relSpeedup=0.006
+run#=17	threadCnt=32	time=0.3540	statespace=262144	insertedCnt=262144	speedup=0.215	relSpeedup=0.007

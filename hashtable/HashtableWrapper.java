@@ -16,7 +16,7 @@ public class HashtableWrapper implements AbstractFastSet {
 	@Override
 	public boolean findOrPut(Vector v) {
 		boolean found = false;
-		found = (map.putIfAbsent(v,v) != null);
+		found = (map.put(v,v) != null);
 		return found;
 	}
 
