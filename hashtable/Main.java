@@ -6,24 +6,22 @@ import other.Logger;
 
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.InterruptedIOException;
 import java.text.SimpleDateFormat;
 import java.util.*;
 import java.util.concurrent.*;
 
-import static jdk.nashorn.internal.runtime.regexp.joni.constants.Arguments.NON;
 import static other.Logger.logV;
 
 //NOTE: run with jvm arguments to increase heap size if necessary, for example: -Xms512m -Xmx6g
 public class Main {
 
-	//Total insertion attempts will be STATESPACE_SIZE * STATESPACE_OVERLAP, where STATESPACE_SIZE insertions have "unique" data
-	static final int STATESPACE_SIZE = 4*1024*1024;
-	static final float STATESPACE_OVERLAP =  2f;
+	static final float STATESPACE_OVERLAP =  1f;
 	//FREE_FACTOR: how much to over-allocate in the hashtable (determines load-factor)
-	static final int FREE_FACTOR = 2;
+	static final int[] FREE_FACTORS = {2,4};
+	//Total insertion attempts will be STATESPACE_SIZE * STATESPACE_OVERLAP, where STATESPACE_SIZE insertions have "unique" data
+	static final int STATESPACE_SIZE = (int) Math.pow(2, 28) / FREE_FACTORS[FREE_FACTORS.length-1]; //assuming FREE_FACTORS has largest value at the end
 	//THREADCOUNTS: for each entry a benchmark will be performed using this many threads
-	static final int[] THREADCOUNTS = {1,1,1,2,2,2, 4, 4, 4, 8, 8, 8};
+	static final int[] THREADCOUNTS = {1,1,1,2,2,2,4,4,4,8,8,8,16,16,16,32,32,32};
 
 	public enum MapType {
 		FASTSET,
@@ -34,13 +32,17 @@ public class Main {
 
 	public static void main(String[] args) throws InterruptedException {
 		printMemoryMax();
-//		performBenchmark(MapType.CONCURRENT_HASHMAP);
-//		performBenchmark(MapType.HASHTABLE);
-		performBenchmark(MapType.NONBLOCKING_HASHMAP);
-		performBenchmark(MapType.FASTSET);
+		for (int freeFactor : FREE_FACTORS) {
+			System.out.println("Starting benchmarks with FREE_FACTOR: "+freeFactor);
+			performBenchmark(MapType.CONCURRENT_HASHMAP,freeFactor);
+			performBenchmark(MapType.HASHTABLE,freeFactor);
+			performBenchmark(MapType.NONBLOCKING_HASHMAP,freeFactor);
+			performBenchmark(MapType.FASTSET, freeFactor);
+		}
+
 	}
 
-	public static void performBenchmark(final MapType MAP_TYPE) {
+	public static void performBenchmark(final MapType MAP_TYPE, final int FREE_FACTOR) {
 
 		BenchmarkResult[] benchmarkResults = new BenchmarkResult[THREADCOUNTS.length];
 
@@ -93,7 +95,7 @@ public class Main {
 						@Override
 						public void run() {
 							try {
-								barrier.await(180, TimeUnit.SECONDS);
+								barrier.await(360, TimeUnit.SECONDS);
 							} catch (InterruptedException | BrokenBarrierException | TimeoutException e) {
 								e.printStackTrace();
 							}
@@ -125,8 +127,8 @@ public class Main {
 
 				System.gc();
 				try {
-					Thread.sleep(200);
-					barrier.await(180, TimeUnit.SECONDS);
+					Thread.sleep(1000);
+					barrier.await(360, TimeUnit.SECONDS);
 				} catch (InterruptedException | BrokenBarrierException | TimeoutException e1) {
 					e1.printStackTrace();
 				}
@@ -161,27 +163,36 @@ public class Main {
 					}
 				}
 
-				printMemoryStatistics();
+//				printMemoryStatistics();
 				s.cleanup();
 
 				benchmarkResults[run] = new BenchmarkResult(run, STATESPACE_SIZE, diffSeconds, NUM_OF_THREADS, insertedCounter);
-				benchmarkResults[run].speedup = benchmarkResults[0].diffSeconds / benchmarkResults[run].diffSeconds;
-				benchmarkResults[run].relSpeedup = benchmarkResults[run].speedup / benchmarkResults[run].num_of_threads;
-//			System.out.printf("Inserting %d vectors took %.4f seconds on %d threads. %d/%d data[] places were filled.\n", STATESPACE_SIZE, diffSeconds, NUM_OF_THREADS, insertedCounter, resultData.length);
 				if (insertedCounter != STATESPACE_SIZE) {
 					System.out.println("insertedCounter == "+insertedCounter + " STATESPACE_SIZE=="+STATESPACE_SIZE);
 					throw new AssertionError("insertedCounter != STATESPACE_SIZE");
 				}
 			}
-		}catch(AssertionError e) {
+		}catch(Exception e) {
 			e.printStackTrace();
 		}finally{
-			System.out.println("Colisssions: " + Debug.colissions);
-			Debug.colissions.set(0);
+			//first determine value that has speedup of exactly 1
+			int lastIndexLowestThreaded = 0;
+			int lowestThreadCount = THREADCOUNTS[0];
+			while(THREADCOUNTS[lastIndexLowestThreaded] == lowestThreadCount){
+				lastIndexLowestThreaded++;
+			}
+			lastIndexLowestThreaded--;
+
 			System.out.printf("Benchmark results for %s at %s (System: %s)\n", BenchmarkResult.mapImplementation, new SimpleDateFormat("HH:mm yyyy-MM-dd").format(new Date()), BenchmarkResult.system);
 			System.out.println("Free-factor: " + FREE_FACTOR + "\t Overlap: "+STATESPACE_OVERLAP);
 			for (BenchmarkResult result : benchmarkResults) {
 				if (result != null) {
+					if (benchmarkResults[lastIndexLowestThreaded] != null) {
+						result.speedup = benchmarkResults[lastIndexLowestThreaded].diffSeconds / result.diffSeconds;
+						result.relSpeedup = result.speedup / result.num_of_threads;
+					}
+
+
 					System.out.println(result.toString());
 				}
 			}

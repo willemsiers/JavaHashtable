@@ -178,10 +178,6 @@ public class FastSet implements AbstractFastSet{
 						}
 					}else{
 					}
-
-//					if (data[bucketOffsetLongs] == null) {
-//						throw new AssertionError("bucket wasn't empty, but data related to that bucket was null");
-//					}
 				}
 			}
 
