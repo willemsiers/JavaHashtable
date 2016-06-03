@@ -11,6 +11,7 @@ import java.text.SimpleDateFormat;
 import java.util.*;
 import java.util.concurrent.*;
 
+import static jdk.nashorn.internal.runtime.regexp.joni.constants.Arguments.NON;
 import static other.Logger.logV;
 
 //NOTE: run with jvm arguments to increase heap size if necessary, for example: -Xms512m -Xmx6g
@@ -22,11 +23,12 @@ public class Main {
 	//FREE_FACTOR: how much to over-allocate in the hashtable (determines load-factor)
 	static final int FREE_FACTOR = 2;
 	//THREADCOUNTS: for each entry a benchmark will be performed using this many threads
-	static final int[] THREADCOUNTS = {1,1,1,1,1,2,2,2,2,2,4,4,4,4,4};
+	static final int[] THREADCOUNTS = {1,1,1,2,2,2, 4, 4, 4, 8, 8, 8};
 
 	public enum MapType {
 		FASTSET,
 		CONCURRENT_HASHMAP,
+		NONBLOCKING_HASHMAP,
 		HASHTABLE
 	};
 
@@ -34,6 +36,7 @@ public class Main {
 		printMemoryMax();
 //		performBenchmark(MapType.CONCURRENT_HASHMAP);
 //		performBenchmark(MapType.HASHTABLE);
+		performBenchmark(MapType.NONBLOCKING_HASHMAP);
 		performBenchmark(MapType.FASTSET);
 	}
 
@@ -56,6 +59,9 @@ public class Main {
 						break;
 					case HASHTABLE:
 						s = new HashtableWrapper(new Hashtable<Vector, Vector>(STATESPACE_SIZE * FREE_FACTOR));
+						break;
+					case NONBLOCKING_HASHMAP:
+						s = new HashtableWrapper(new NonBlockingHashMap<Vector, Vector>(STATESPACE_SIZE * FREE_FACTOR));
 						break;
 					default:
 						throw new IllegalArgumentException("No such map type");

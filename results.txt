@@ -333,3 +333,34 @@ run#=11	threadCnt=4	time=0.5700	statespace=4194304	insertedCnt=4194304	speedup=0
 run#=12	threadCnt=4	time=0.5880	statespace=4194304	insertedCnt=4194304	speedup=0.944	relSpeedup=0.236
 run#=13	threadCnt=4	time=0.5740	statespace=4194304	insertedCnt=4194304	speedup=0.967	relSpeedup=0.242
 run#=14	threadCnt=4	time=0.5500	statespace=4194304	insertedCnt=4194304	speedup=1.009	relSpeedup=0.252
+
+============= Comparing Click's vs My hashtable
+Benchmark results for org.cliffc.high_scale_lib.NonBlockingHashMap at 11:33 2016-06-03 (System: willem-3570R-370R-470R-450R-510R-4450RV)
+Free-factor: 2	 Overlap: 2.0
+run#=0	threadCnt=1	time=4.0850	statespace=4194304	insertedCnt=4194304	speedup=1.000	relSpeedup=1.000
+run#=1	threadCnt=1	time=2.9370	statespace=4194304	insertedCnt=4194304	speedup=1.391	relSpeedup=1.391
+run#=2	threadCnt=1	time=3.1650	statespace=4194304	insertedCnt=4194304	speedup=1.291	relSpeedup=1.291
+run#=3	threadCnt=2	time=2.4000	statespace=4194304	insertedCnt=4194304	speedup=1.702	relSpeedup=0.851
+run#=4	threadCnt=2	time=2.6190	statespace=4194304	insertedCnt=4194304	speedup=1.560	relSpeedup=0.780
+run#=5	threadCnt=2	time=2.3620	statespace=4194304	insertedCnt=4194304	speedup=1.729	relSpeedup=0.865
+run#=6	threadCnt=4	time=2.8920	statespace=4194304	insertedCnt=4194304	speedup=1.413	relSpeedup=0.353
+run#=7	threadCnt=4	time=3.3380	statespace=4194304	insertedCnt=4194304	speedup=1.224	relSpeedup=0.306
+run#=8	threadCnt=4	time=2.4640	statespace=4194304	insertedCnt=4194304	speedup=1.658	relSpeedup=0.414
+run#=9	threadCnt=8	time=4.2160	statespace=4194304	insertedCnt=4194304	speedup=0.969	relSpeedup=0.121
+run#=10	threadCnt=8	time=3.6440	statespace=4194304	insertedCnt=4194304	speedup=1.121	relSpeedup=0.140
+run#=11	threadCnt=8	time=4.0760	statespace=4194304	insertedCnt=4194304	speedup=1.002	relSpeedup=0.125
+
+Benchmark results for FastSet at 11:35 2016-06-03 (System: willem-3570R-370R-470R-450R-510R-4450RV)
+Free-factor: 2	 Overlap: 2.0
+run#=0	threadCnt=1	time=0.5300	statespace=4194304	insertedCnt=4194304	speedup=1.000	relSpeedup=1.000
+run#=1	threadCnt=1	time=0.4920	statespace=4194304	insertedCnt=4194304	speedup=1.077	relSpeedup=1.077
+run#=2	threadCnt=1	time=0.5450	statespace=4194304	insertedCnt=4194304	speedup=0.972	relSpeedup=0.972
+run#=3	threadCnt=2	time=0.6460	statespace=4194304	insertedCnt=4194304	speedup=0.820	relSpeedup=0.410
+run#=4	threadCnt=2	time=0.4800	statespace=4194304	insertedCnt=4194304	speedup=1.104	relSpeedup=0.552
+run#=5	threadCnt=2	time=0.4440	statespace=4194304	insertedCnt=4194304	speedup=1.194	relSpeedup=0.597
+run#=6	threadCnt=4	time=0.6360	statespace=4194304	insertedCnt=4194304	speedup=0.833	relSpeedup=0.208
+run#=7	threadCnt=4	time=0.6590	statespace=4194304	insertedCnt=4194304	speedup=0.804	relSpeedup=0.201
+run#=8	threadCnt=4	time=0.6400	statespace=4194304	insertedCnt=4194304	speedup=0.828	relSpeedup=0.207
+run#=9	threadCnt=8	time=1.2310	statespace=4194304	insertedCnt=4194304	speedup=0.431	relSpeedup=0.054
+run#=10	threadCnt=8	time=1.3610	statespace=4194304	insertedCnt=4194304	speedup=0.389	relSpeedup=0.049
+run#=11	threadCnt=8	time=1.3780	statespace=4194304	insertedCnt=4194304	speedup=0.385	relSpeedup=0.048
