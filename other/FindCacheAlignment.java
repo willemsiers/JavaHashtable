@@ -3,6 +3,8 @@ package other;
 import sun.misc.Unsafe;
 
 import java.lang.reflect.Field;
+import java.nio.ByteBuffer;
+import java.nio.ByteOrder;
 
 public class FindCacheAlignment {
 
@@ -21,6 +23,7 @@ public class FindCacheAlignment {
 		}
 
 		final int SIZE_LONG = 8;
+
 
 		long test = 0;
 		final int SIZE = 16;
@@ -47,4 +50,34 @@ public class FindCacheAlignment {
 		System.out.println(test);
 		unsafe.freeMemory(indicesBase);
 	}
+//
+//	public static void main(String[] args) {
+//
+//		final int SIZE_LONG = 8;
+//
+//		long test = 0;
+//		final int SIZE = 32;
+//		final int RUN_SIZE = 16;
+//
+//		final long NUM_OF_RUNS = 1l*1024*1024l*1024l;
+//
+//		ByteBuffer buffer = ByteBuffer.allocateDirect(SIZE * SIZE_LONG);
+//
+//		final int startNumber = 2;
+//		for(int a = 0; a<5; a++) {
+//			for (int offsetOF = startNumber; offsetOF < SIZE - RUN_SIZE + startNumber; offsetOF++) {
+//				int offset = offsetOF % RUN_SIZE;
+//				long start = System.currentTimeMillis();
+//				for (long run = 0; run < offset + NUM_OF_RUNS; run++) {
+//					for (int i = offset; i < offset + RUN_SIZE; i++) {
+//						buffer.getLong(i * SIZE_LONG);
+//					}
+//				}
+//				System.out.printf("offset %d \t= %dms\n", offset, System.currentTimeMillis() - start);
+//			}
+//
+//		}
+//
+//		System.out.println(test);
+//	}
 }

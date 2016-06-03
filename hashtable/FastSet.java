@@ -8,25 +8,24 @@ import static other.Logger.*;
 
 public class FastSet implements AbstractFastSet{
 
-	private boolean cleaned_up = false;
-
-	private static final long LONG_KEYVALUE_EMPTY = 0;
-	final static int LONG_SIZE_BYTES = 8;
-	final static long LONG_MASK_OCCUPIED = 1l << (LONG_SIZE_BYTES * 8 - 1);
-	final static long LONG_MASK_WRITING = 1l << (LONG_SIZE_BYTES * 8 - 2);
-	final static long LONG_MASK_HASH = (~(LONG_MASK_OCCUPIED | LONG_MASK_WRITING));
-	final static int KEY_SIZE_BYTES = LONG_SIZE_BYTES;
-	public final Unsafe unsafe;
-
-	public final long indicesBase;
 	public final Vector[] data;
 	public final int size;
-	public final int sizeMask;
+	private final int sizeMask;
+	private final long indicesBase;
+	private boolean cleaned_up = false;
+
+	private final static int LONG_SIZE_BYTES = 8;
+	private final static long LONG_MASK_OCCUPIED = 1l << (LONG_SIZE_BYTES * 8 - 1);
+	private final static long LONG_MASK_WRITING = 1l << (LONG_SIZE_BYTES * 8 - 2);
+	private final static long LONG_MASK_HASH = (~(LONG_MASK_OCCUPIED | LONG_MASK_WRITING));
+	private static final long LONG_KEYVALUE_EMPTY = 0;
+	private final static int KEY_SIZE_BYTES = LONG_SIZE_BYTES;
+	private final Unsafe unsafe;
+
 
 	public FastSet(int init_size) {
-		this.data = new Vector[init_size];
 		this.size = init_size;
-		this.sizeMask = init_size - 1;
+		this.sizeMask = this.size - 1;
 
 		//TODO: Maybe change size to first power of 2?
 		if( (this.size == 0) || ((this.size & (this.size - 1)) != 0))
@@ -34,9 +33,8 @@ public class FastSet implements AbstractFastSet{
 			throw new IllegalArgumentException("size must be a power of two.");
 		}
 
-		// todo
-		// dbs->data = RTalign (CACHE_LINE_SIZE, dbs->total_length * dbs->size_max);
-		// dbs->todo_data = RTalign (CACHE_LINE_SIZE, dbs->total_length * dbs->size_max);
+		this.data = new Vector[this.size];
+
 		Unsafe defUnsafe;
 		try {
 			Field f = Unsafe.class.getDeclaredField("theUnsafe");
@@ -55,7 +53,7 @@ public class FastSet implements AbstractFastSet{
 			throw new NullPointerException("\"Unsafe\" isn't initialized");
 		}
 
-		indicesBase = unsafe.allocateMemory(init_size * KEY_SIZE_BYTES);
+		indicesBase = unsafe.allocateMemory(this.size * KEY_SIZE_BYTES);
 		this.clear();
 	}
 
@@ -70,8 +68,18 @@ public class FastSet implements AbstractFastSet{
 //        Arrays.fill(data, null);
 	}
 
-	public static  int stringHash(String s, int iteration) {
+	public static int stringHash(String s, int iteration) {
 		return s.hashCode() * iteration;
+
+
+		/** See https://github.com/boundary/high-scale-lib/blob/master/src/main/java/org/cliffc/high_scale_lib/NonBlockingHashMap.java
+		     h += (h <<  15) ^ 0xffffcd7d;
+			 h ^= (h >>> 10);
+			 h += (h <<   3);
+			 h ^= (h >>>  6);
+			 h += (h <<   2) + (h << 14);
+			 return h ^ (h >>> 16);
+		 */
 
 		// TODO: better hash function
 		/**
@@ -134,7 +142,7 @@ public class FastSet implements AbstractFastSet{
 		final int THRESHOLD = 1000; //How many times to rehash before giving up
 		final int CACHE_LINE_SIZE = 8;
 		int count = 1;
-		int h = Math.abs(stringHash(v.value, count));
+		int h = stringHash(v.value, count);
 		final int originalHash = h; //Will be stored in the bucket (indices buffer)
 		int lineStart = h & this.sizeMask;   //Where to start probing
 
@@ -152,12 +160,13 @@ public class FastSet implements AbstractFastSet{
 				{
 					//Debug.colissions.incrementAndGet();
 					bucketValue = unsafe.getLong(indicesBase + bucketOffsetBytes);
-					while (isBucketWriting(bucketValue)) {
-						bucketValue = unsafe.getLong(indicesBase + bucketOffsetBytes);
-						if(!NO_LOGGING){logV("waiting...");}
-					}
 					//TODO: maybe instead of storing and comparing hashes, store and compare the index?
+					//Before entering "while(isWriting)", check if hashes are even the same (hash value is already written on the CAS)
 					if ( (bucketValue & LONG_MASK_HASH) == (originalHash & LONG_MASK_HASH)) {
+						while (isBucketWriting(bucketValue)) {
+							bucketValue = unsafe.getLong(indicesBase + bucketOffsetBytes);
+							if(!NO_LOGGING){logV("waiting...");}
+						}
 
 						if (data[bucketOffsetLongs].equals(v)) { //TODO: Can == be used?
 							if(!NO_LOGGING){logV("equal data found");}
@@ -178,7 +187,7 @@ public class FastSet implements AbstractFastSet{
 
 			count++;
 			if(!NO_LOGGING){logV("rehashing #" + count);}
-			lineStart = Math.abs(stringHash(v.value, count) & this.sizeMask);
+			lineStart = stringHash(v.value, count) & this.sizeMask;
 		}
 
 		logE(String.format("Unable to insert \"%s\" (Threshold exceeded)", v.toString()));

@@ -1,10 +1,12 @@
 package hashtable;
 
+import org.cliffc.high_scale_lib.NonBlockingHashMap;
 import other.BenchmarkResult;
 import other.Logger;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.InterruptedIOException;
 import java.text.SimpleDateFormat;
 import java.util.*;
 import java.util.concurrent.*;
@@ -15,12 +17,12 @@ import static other.Logger.logV;
 public class Main {
 
 	//Total insertion attempts will be STATESPACE_SIZE * STATESPACE_OVERLAP, where STATESPACE_SIZE insertions have "unique" data
-	static final int STATESPACE_SIZE = 2*1024*1024;
-	static final float STATESPACE_OVERLAP =  0.1f;
+	static final int STATESPACE_SIZE = 4*1024*1024;
+	static final float STATESPACE_OVERLAP =  2f;
 	//FREE_FACTOR: how much to over-allocate in the hashtable (determines load-factor)
-	static final int FREE_FACTOR = 3;
+	static final int FREE_FACTOR = 2;
 	//THREADCOUNTS: for each entry a benchmark will be performed using this many threads
-	static final int[] THREADCOUNTS = {1,2,4};
+	static final int[] THREADCOUNTS = {1,1,1,1,1,2,2,2,2,2,4,4,4,4,4};
 
 	public enum MapType {
 		FASTSET,
@@ -30,8 +32,8 @@ public class Main {
 
 	public static void main(String[] args) throws InterruptedException {
 		printMemoryMax();
-		performBenchmark(MapType.CONCURRENT_HASHMAP);
-		performBenchmark(MapType.HASHTABLE);
+//		performBenchmark(MapType.CONCURRENT_HASHMAP);
+//		performBenchmark(MapType.HASHTABLE);
 		performBenchmark(MapType.FASTSET);
 	}
 
@@ -139,14 +141,14 @@ public class Main {
 
 				int insertedCounter = 0;
 				Vector[] resultData = s.getData();
-//				HashSet<Vector> tmpSet = new HashSet<Vector>(resultData.length);
+				HashSet<Vector> tmpSet = new HashSet<Vector>(resultData.length);
 				for (int i = 0; i < resultData.length; i++) {
 					if (resultData[i].value != null) {
 						insertedCounter++;
-//						boolean inserted = tmpSet.add(resultData[i]);
-//						if(!inserted){
-//							System.out.printf("Element %d with value %s exists!\n", i, resultData[i]);
-//						}
+						boolean inserted = tmpSet.add(resultData[i]);
+						if(!inserted){
+							System.out.printf("Element %d with value %s exists!\n", i, resultData[i]);
+						}
 					}
 					if (!Logger.NO_LOGGING) {
 						logV("data " + i + ":\t" + resultData[i]);
@@ -193,6 +195,8 @@ public class Main {
 			hostname = "unknown";
 			e.printStackTrace();
 		}
+
+		hostname = hostname.split("\n")[0];
 		return hostname;
 	}
 

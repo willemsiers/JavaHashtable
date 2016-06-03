@@ -21,6 +21,6 @@ public class BenchmarkResult {
 
 	@Override
 	public String toString() {
-		return String.format("Result{run#=%d, statespace=%d, time=%.4f, threadCnt=%d, insertedCnt=%d, speedup=%.3f, relSpeedup=%.3f}", run, statespace_size, diffSeconds, num_of_threads, insertedCounter, speedup, relSpeedup);
+		return String.format("run#=%d\tthreadCnt=%d\ttime=%.4f\tstatespace=%d\tinsertedCnt=%d\tspeedup=%.3f\trelSpeedup=%.3f", run, num_of_threads, diffSeconds, statespace_size, insertedCounter, speedup, relSpeedup);
 	}
 }

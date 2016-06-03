@@ -170,3 +170,166 @@ Result{run#=1, statespace=11534336, time=0.6780, threadCnt=1, insertedCnt=115343
 Result{run#=2, statespace=11534336, time=0.7470, threadCnt=1, insertedCnt=11534336, speedup=1.048, relSpeedup=1.048}
 Result{run#=3, statespace=11534336, time=0.6970, threadCnt=1, insertedCnt=11534336, speedup=1.123, relSpeedup=1.123}
 Result{run#=4, statespace=11534336, time=0.6770, threadCnt=1, insertedCnt=11534336, speedup=1.157, relSpeedup=1.157}
+
+====
+Modulo:
+Result{run#=0, statespace=4194304, time=0.8720, threadCnt=1, insertedCnt=4194304, speedup=1.000, relSpeedup=1.000}
+
+Power of two bitmask:
+Result{run#=0, statespace=4194304, time=0.6020, threadCnt=1, insertedCnt=4194304, speedup=1.000, relSpeedup=1.000}
+
+===
+.equals on vectors
+Result{run#=0, statespace=4194304, time=0.6610, threadCnt=1, insertedCnt=4194304, speedup=1.000, relSpeedup=1.000}
+Result{run#=0, statespace=4194304, time=0.5950, threadCnt=1, insertedCnt=4194304, speedup=1.000, relSpeedup=1.000}
+Result{run#=0, statespace=4194304, time=0.5960, threadCnt=1, insertedCnt=4194304, speedup=1.000, relSpeedup=1.000}
+Result{run#=1, statespace=4194304, time=0.5160, threadCnt=1, insertedCnt=4194304, speedup=1.155, relSpeedup=1.155}
+Result{run#=2, statespace=4194304, time=0.5360, threadCnt=1, insertedCnt=4194304, speedup=1.112, relSpeedup=1.112}
+
+vector == v (Note: probably not usable in real environment where references aren't the same).
+Result{run#=0, statespace=4194304, time=0.5460, threadCnt=1, insertedCnt=4194304, speedup=1.000, relSpeedup=1.000}
+Result{run#=1, statespace=4194304, time=0.5230, threadCnt=1, insertedCnt=4194304, speedup=1.044, relSpeedup=1.044}
+Result{run#=2, statespace=4194304, time=0.5400, threadCnt=1, insertedCnt=4194304, speedup=1.011, relSpeedup=1.011}
+Result{run#=0, statespace=4194304, time=0.5950, threadCnt=1, insertedCnt=4194304, speedup=1.000, relSpeedup=1.000}
+Result{run#=1, statespace=4194304, time=0.5370, threadCnt=1, insertedCnt=4194304, speedup=1.108, relSpeedup=1.108}
+Result{run#=2, statespace=4194304, time=0.5190, threadCnt=1, insertedCnt=4194304, speedup=1.146, relSpeedup=1.146}
+
+============= Some runs on laptop
+Max memory: 5461 MB
+Free:2411MB	Total3712MB	Max5461MB
+Colisssions: 0
+Benchmark results for java.util.concurrent.ConcurrentHashMap at 12:42 2016-06-02 (System: willem-3570R-370R-470R-450R-510R-4450RV )
+Free-factor: 2	 Overlap: 2.0
+Result{run#=0, statespace=8388608, time=4.7910, threadCnt=1, insertedCnt=8388608, speedup=1.000, relSpeedup=1.000}
+Result{run#=1, statespace=8388608, time=1.9140, threadCnt=1, insertedCnt=8388608, speedup=2.503, relSpeedup=2.503}
+Result{run#=2, statespace=8388608, time=1.4910, threadCnt=1, insertedCnt=8388608, speedup=3.213, relSpeedup=3.213}
+Result{run#=3, statespace=8388608, time=1.4050, threadCnt=2, insertedCnt=8388608, speedup=3.410, relSpeedup=1.705}
+Result{run#=4, statespace=8388608, time=1.0640, threadCnt=2, insertedCnt=8388608, speedup=4.503, relSpeedup=2.251}
+Result{run#=5, statespace=8388608, time=1.3030, threadCnt=2, insertedCnt=8388608, speedup=3.677, relSpeedup=1.838}
+Result{run#=6, statespace=8388608, time=1.5330, threadCnt=4, insertedCnt=8388608, speedup=3.125, relSpeedup=0.781}
+Result{run#=7, statespace=8388608, time=1.5970, threadCnt=4, insertedCnt=8388608, speedup=3.000, relSpeedup=0.750}
+Result{run#=8, statespace=8388608, time=1.2910, threadCnt=4, insertedCnt=8388608, speedup=3.711, relSpeedup=0.928}
+
+Benchmark results for java.util.Hashtable at 12:44 2016-06-02 (System: willem-3570R-370R-470R-450R-510R-4450RV )
+Free-factor: 2	 Overlap: 2.0
+Result{run#=0, statespace=8388608, time=0.9590, threadCnt=1, insertedCnt=8388608, speedup=1.000, relSpeedup=1.000}
+Result{run#=1, statespace=8388608, time=0.6840, threadCnt=1, insertedCnt=8388608, speedup=1.402, relSpeedup=1.402}
+Result{run#=2, statespace=8388608, time=0.7040, threadCnt=1, insertedCnt=8388608, speedup=1.362, relSpeedup=1.362}
+Result{run#=3, statespace=8388608, time=3.6170, threadCnt=2, insertedCnt=8388608, speedup=0.265, relSpeedup=0.133}
+Result{run#=4, statespace=8388608, time=3.5180, threadCnt=2, insertedCnt=8388608, speedup=0.273, relSpeedup=0.136}
+Result{run#=5, statespace=8388608, time=3.9960, threadCnt=2, insertedCnt=8388608, speedup=0.240, relSpeedup=0.120}
+Result{run#=6, statespace=8388608, time=7.2160, threadCnt=4, insertedCnt=8388608, speedup=0.133, relSpeedup=0.033}
+Result{run#=7, statespace=8388608, time=5.1540, threadCnt=4, insertedCnt=8388608, speedup=0.186, relSpeedup=0.047}
+Result{run#=8, statespace=8388608, time=4.7320, threadCnt=4, insertedCnt=8388608, speedup=0.203, relSpeedup=0.051}
+
+Benchmark results for FastSet at 12:47 2016-06-02 (System: willem-3570R-370R-470R-450R-510R-4450RV )
+Free-factor: 2	 Overlap: 2.0
+Result{run#=0, statespace=8388608, time=0.9960, threadCnt=1, insertedCnt=8388608, speedup=1.000, relSpeedup=1.000}
+Result{run#=1, statespace=8388608, time=0.9570, threadCnt=1, insertedCnt=8388608, speedup=1.041, relSpeedup=1.041}
+Result{run#=2, statespace=8388608, time=0.9630, threadCnt=1, insertedCnt=8388608, speedup=1.034, relSpeedup=1.034}
+Result{run#=3, statespace=8388608, time=0.8070, threadCnt=2, insertedCnt=8388608, speedup=1.234, relSpeedup=0.617}
+Result{run#=4, statespace=8388608, time=0.8670, threadCnt=2, insertedCnt=8388608, speedup=1.149, relSpeedup=0.574}
+Result{run#=5, statespace=8388608, time=1.0180, threadCnt=2, insertedCnt=8388608, speedup=0.978, relSpeedup=0.489}
+Result{run#=6, statespace=8388608, time=1.3500, threadCnt=4, insertedCnt=8388608, speedup=0.738, relSpeedup=0.184}
+Result{run#=7, statespace=8388608, time=1.4580, threadCnt=4, insertedCnt=8388608, speedup=0.683, relSpeedup=0.171}
+Result{run#=8, statespace=8388608, time=1.3710, threadCnt=4, insertedCnt=8388608, speedup=0.726, relSpeedup=0.182}
+
+=== And again some results...
+--- Conclusions from below:
+ConcurrentHashMap has a stable performance, and some speedup from 2 threads, but 4 threads slows down again
+Hashtable is very fast in single-threaded but VERY slow multi-threaded (uses locking)
+FastSet scales similarly to ConcurrentHashMap, but is faster overal. In the single-threaded run it is slower than Hashtable.
+
+Max memory: 5461 MB
+Benchmark results for java.util.concurrent.ConcurrentHashMap at 12:59 2016-06-02 (System: willem-3570R-370R-470R-450R-510R-4450RV)
+Free-factor: 2	 Overlap: 2.0
+run#=0	threadCnt=1	time=4.5840	statespace=8388608	insertedCnt=8388608	speedup=1.000	relSpeedup=1.000
+run#=1	threadCnt=1	time=1.9220	statespace=8388608	insertedCnt=8388608	speedup=2.385	relSpeedup=2.385
+run#=2	threadCnt=1	time=1.5300	statespace=8388608	insertedCnt=8388608	speedup=2.996	relSpeedup=2.996
+run#=3	threadCnt=1	time=1.3320	statespace=8388608	insertedCnt=8388608	speedup=3.441	relSpeedup=3.441
+run#=4	threadCnt=1	time=1.5660	statespace=8388608	insertedCnt=8388608	speedup=2.927	relSpeedup=2.927
+run#=5	threadCnt=2	time=1.1140	statespace=8388608	insertedCnt=8388608	speedup=4.115	relSpeedup=2.057
+run#=6	threadCnt=2	time=1.2370	statespace=8388608	insertedCnt=8388608	speedup=3.706	relSpeedup=1.853
+run#=7	threadCnt=2	time=1.1360	statespace=8388608	insertedCnt=8388608	speedup=4.035	relSpeedup=2.018
+run#=8	threadCnt=2	time=1.1540	statespace=8388608	insertedCnt=8388608	speedup=3.972	relSpeedup=1.986
+run#=9	threadCnt=2	time=0.9770	statespace=8388608	insertedCnt=8388608	speedup=4.692	relSpeedup=2.346
+run#=10	threadCnt=4	time=1.3550	statespace=8388608	insertedCnt=8388608	speedup=3.383	relSpeedup=0.846
+run#=11	threadCnt=4	time=1.2360	statespace=8388608	insertedCnt=8388608	speedup=3.709	relSpeedup=0.927
+run#=12	threadCnt=4	time=1.3530	statespace=8388608	insertedCnt=8388608	speedup=3.388	relSpeedup=0.847
+run#=13	threadCnt=4	time=1.2820	statespace=8388608	insertedCnt=8388608	speedup=3.576	relSpeedup=0.894
+run#=14	threadCnt=4	time=1.3050	statespace=8388608	insertedCnt=8388608	speedup=3.513	relSpeedup=0.878
+
+Benchmark results for java.util.Hashtable at 13:03 2016-06-02 (System: willem-3570R-370R-470R-450R-510R-4450RV)
+Free-factor: 2	 Overlap: 2.0
+run#=0	threadCnt=1	time=0.7890	statespace=8388608	insertedCnt=8388608	speedup=1.000	relSpeedup=1.000
+run#=1	threadCnt=1	time=0.6870	statespace=8388608	insertedCnt=8388608	speedup=1.148	relSpeedup=1.148
+run#=2	threadCnt=1	time=0.6910	statespace=8388608	insertedCnt=8388608	speedup=1.142	relSpeedup=1.142
+run#=3	threadCnt=1	time=0.7790	statespace=8388608	insertedCnt=8388608	speedup=1.013	relSpeedup=1.013
+run#=4	threadCnt=1	time=0.8390	statespace=8388608	insertedCnt=8388608	speedup=0.940	relSpeedup=0.940
+run#=5	threadCnt=2	time=3.8770	statespace=8388608	insertedCnt=8388608	speedup=0.204	relSpeedup=0.102
+run#=6	threadCnt=2	time=3.8410	statespace=8388608	insertedCnt=8388608	speedup=0.205	relSpeedup=0.103
+run#=7	threadCnt=2	time=3.6600	statespace=8388608	insertedCnt=8388608	speedup=0.216	relSpeedup=0.108
+run#=8	threadCnt=2	time=4.1170	statespace=8388608	insertedCnt=8388608	speedup=0.192	relSpeedup=0.096
+run#=9	threadCnt=2	time=3.7750	statespace=8388608	insertedCnt=8388608	speedup=0.209	relSpeedup=0.105
+run#=10	threadCnt=4	time=7.2240	statespace=8388608	insertedCnt=8388608	speedup=0.109	relSpeedup=0.027
+run#=11	threadCnt=4	time=6.9590	statespace=8388608	insertedCnt=8388608	speedup=0.113	relSpeedup=0.028
+run#=12	threadCnt=4	time=7.3730	statespace=8388608	insertedCnt=8388608	speedup=0.107	relSpeedup=0.027
+run#=13	threadCnt=4	time=5.3900	statespace=8388608	insertedCnt=8388608	speedup=0.146	relSpeedup=0.037
+run#=14	threadCnt=4	time=7.1220	statespace=8388608	insertedCnt=8388608	speedup=0.111	relSpeedup=0.028
+
+Benchmark results for FastSet at 13:07 2016-06-02 (System: willem-3570R-370R-470R-450R-510R-4450RV)
+Free-factor: 2	 Overlap: 2.0
+run#=0	threadCnt=1	time=0.9300	statespace=8388608	insertedCnt=8388608	speedup=1.000	relSpeedup=1.000
+run#=1	threadCnt=1	time=0.9550	statespace=8388608	insertedCnt=8388608	speedup=0.974	relSpeedup=0.974
+run#=2	threadCnt=1	time=0.9930	statespace=8388608	insertedCnt=8388608	speedup=0.937	relSpeedup=0.937
+run#=3	threadCnt=1	time=1.0020	statespace=8388608	insertedCnt=8388608	speedup=0.928	relSpeedup=0.928
+run#=4	threadCnt=1	time=1.0080	statespace=8388608	insertedCnt=8388608	speedup=0.923	relSpeedup=0.923
+run#=5	threadCnt=2	time=0.8600	statespace=8388608	insertedCnt=8388608	speedup=1.081	relSpeedup=0.541
+run#=6	threadCnt=2	time=0.7830	statespace=8388608	insertedCnt=8388608	speedup=1.188	relSpeedup=0.594
+run#=7	threadCnt=2	time=0.7940	statespace=8388608	insertedCnt=8388608	speedup=1.171	relSpeedup=0.586
+run#=8	threadCnt=2	time=0.7640	statespace=8388608	insertedCnt=8388608	speedup=1.217	relSpeedup=0.609
+run#=9	threadCnt=2	time=0.7490	statespace=8388608	insertedCnt=8388608	speedup=1.242	relSpeedup=0.621
+run#=10	threadCnt=4	time=1.0890	statespace=8388608	insertedCnt=8388608	speedup=0.854	relSpeedup=0.213
+run#=11	threadCnt=4	time=1.1270	statespace=8388608	insertedCnt=8388608	speedup=0.825	relSpeedup=0.206
+run#=12	threadCnt=4	time=1.1290	statespace=8388608	insertedCnt=8388608	speedup=0.824	relSpeedup=0.206
+run#=13	threadCnt=4	time=1.2310	statespace=8388608	insertedCnt=8388608	speedup=0.755	relSpeedup=0.189
+run#=14	threadCnt=4	time=1.2070	statespace=8388608	insertedCnt=8388608	speedup=0.771	relSpeedup=0.193
+
+
+++++++ If(hashes ==) outside while(writing)
+Benchmark results for FastSet at 13:30 2016-06-02 (System: willem-3570R-370R-470R-450R-510R-4450RV)
+Free-factor: 2	 Overlap: 2.0
+run#=0	threadCnt=1	time=0.5740	statespace=4194304	insertedCnt=4194304	speedup=1.000	relSpeedup=1.000
+run#=1	threadCnt=1	time=0.4920	statespace=4194304	insertedCnt=4194304	speedup=1.167	relSpeedup=1.167
+run#=2	threadCnt=1	time=0.4710	statespace=4194304	insertedCnt=4194304	speedup=1.219	relSpeedup=1.219
+run#=3	threadCnt=1	time=0.4650	statespace=4194304	insertedCnt=4194304	speedup=1.234	relSpeedup=1.234
+run#=4	threadCnt=1	time=0.4730	statespace=4194304	insertedCnt=4194304	speedup=1.214	relSpeedup=1.214
+run#=5	threadCnt=2	time=0.3830	statespace=4194304	insertedCnt=4194304	speedup=1.499	relSpeedup=0.749
+run#=6	threadCnt=2	time=0.5570	statespace=4194304	insertedCnt=4194304	speedup=1.031	relSpeedup=0.515
+run#=7	threadCnt=2	time=0.4530	statespace=4194304	insertedCnt=4194304	speedup=1.267	relSpeedup=0.634
+run#=8	threadCnt=2	time=0.4400	statespace=4194304	insertedCnt=4194304	speedup=1.305	relSpeedup=0.652
+run#=9	threadCnt=2	time=0.4540	statespace=4194304	insertedCnt=4194304	speedup=1.264	relSpeedup=0.632
+run#=10	threadCnt=4	time=0.6800	statespace=4194304	insertedCnt=4194304	speedup=0.844	relSpeedup=0.211
+run#=11	threadCnt=4	time=0.6780	statespace=4194304	insertedCnt=4194304	speedup=0.847	relSpeedup=0.212
+run#=12	threadCnt=4	time=0.6580	statespace=4194304	insertedCnt=4194304	speedup=0.872	relSpeedup=0.218
+run#=13	threadCnt=4	time=0.7110	statespace=4194304	insertedCnt=4194304	speedup=0.807	relSpeedup=0.202
+run#=14	threadCnt=4	time=0.7220	statespace=4194304	insertedCnt=4194304	speedup=0.795	relSpeedup=0.199
+
+++++++ If(hashes ==) INside while(writing)
+Benchmark results for FastSet at 13:35 2016-06-02 (System: willem-3570R-370R-470R-450R-510R-4450RV)
+Free-factor: 2	 Overlap: 2.0
+run#=0	threadCnt=1	time=0.5550	statespace=4194304	insertedCnt=4194304	speedup=1.000	relSpeedup=1.000
+run#=1	threadCnt=1	time=0.5170	statespace=4194304	insertedCnt=4194304	speedup=1.074	relSpeedup=1.074
+run#=2	threadCnt=1	time=0.4480	statespace=4194304	insertedCnt=4194304	speedup=1.239	relSpeedup=1.239
+run#=3	threadCnt=1	time=0.4790	statespace=4194304	insertedCnt=4194304	speedup=1.159	relSpeedup=1.159
+run#=4	threadCnt=1	time=0.4840	statespace=4194304	insertedCnt=4194304	speedup=1.147	relSpeedup=1.147
+run#=5	threadCnt=2	time=0.4270	statespace=4194304	insertedCnt=4194304	speedup=1.300	relSpeedup=0.650
+run#=6	threadCnt=2	time=0.4030	statespace=4194304	insertedCnt=4194304	speedup=1.377	relSpeedup=0.689
+run#=7	threadCnt=2	time=0.4340	statespace=4194304	insertedCnt=4194304	speedup=1.279	relSpeedup=0.639
+run#=8	threadCnt=2	time=0.4410	statespace=4194304	insertedCnt=4194304	speedup=1.259	relSpeedup=0.629
+run#=9	threadCnt=2	time=0.4050	statespace=4194304	insertedCnt=4194304	speedup=1.370	relSpeedup=0.685
+run#=10	threadCnt=4	time=0.6800	statespace=4194304	insertedCnt=4194304	speedup=0.816	relSpeedup=0.204
+run#=11	threadCnt=4	time=0.5700	statespace=4194304	insertedCnt=4194304	speedup=0.974	relSpeedup=0.243
+run#=12	threadCnt=4	time=0.5880	statespace=4194304	insertedCnt=4194304	speedup=0.944	relSpeedup=0.236
+run#=13	threadCnt=4	time=0.5740	statespace=4194304	insertedCnt=4194304	speedup=0.967	relSpeedup=0.242
+run#=14	threadCnt=4	time=0.5500	statespace=4194304	insertedCnt=4194304	speedup=1.009	relSpeedup=0.252
