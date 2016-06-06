@@ -2,7 +2,8 @@ package other;
 
 public class BenchmarkResult {
 	public static String system;
-	public static String mapImplementation;
+	public String mapImplementation;
+	public int freeFactor;
 	public final int run;
 	public final int statespace_size;
 	public final double diffSeconds;
@@ -21,6 +22,6 @@ public class BenchmarkResult {
 
 	@Override
 	public String toString() {
-		return String.format("run#=%d\tthreadCnt=%d\ttime=%.4f\tstatespace=%d\tinsertedCnt=%d\tspeedup=%.3f\trelSpeedup=%.3f", run, num_of_threads, diffSeconds, statespace_size, insertedCounter, speedup, relSpeedup);
+		return String.format("type=%s\trun#=%d\tthreadCnt=%d\ttime=%.4f\tstatespace=%d\tfreefactor=%d\tinsertedCnt=%d\tspeedup=%.3f\trelSpeedup=%.3f",mapImplementation, run, num_of_threads, diffSeconds, statespace_size, freeFactor,insertedCounter, speedup, relSpeedup);
 	}
 }
