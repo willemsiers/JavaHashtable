@@ -88,140 +88,141 @@ public class Main {
 	}
 
 	public static BenchmarkResult[] performBenchmark(final MapType MAP_TYPE, final int FREE_FACTOR) {
-
+		System.out.println("perform benchmark with "+MAP_TYPE.toString());
 		BenchmarkResult[] benchmarkResults = new BenchmarkResult[THREADCOUNTS.length];
-			for (int run = 0; run < THREADCOUNTS.length; run++) {
-				final AbstractFastSet s; //Note: virtual dispatch appears to be slightly slower
-				switch (MAP_TYPE) {
-					case FASTSET:
-						s = new FastSet(STATESPACE_SIZE * FREE_FACTOR);
-						break;
-					case CONCURRENT_HASHMAP:
-						s = new HashtableWrapper(new ConcurrentHashMap<Vector, Vector>(STATESPACE_SIZE * FREE_FACTOR));
-						break;
-					case HASHTABLE:
-						s = new HashtableWrapper(new Hashtable<Vector, Vector>(STATESPACE_SIZE * FREE_FACTOR));
-						break;
-					case NONBLOCKING_HASHMAP:
-						s = new HashtableWrapper(new NonBlockingHashMap<Vector, Vector>(STATESPACE_SIZE * FREE_FACTOR));
-						break;
-					case LOCKLESS_HASHTABLE:
-						s = new HashtableWrapper(new nl.utwente.csc.fmt.locklesshashtable.generalhashtable.NonBlockingHashMap<Vector,Vector>(STATESPACE_SIZE * FREE_FACTOR));
-						break;
-					default:
-						throw new IllegalArgumentException("No such map type");
-				}
 
-				try{
-					final Vector[] statespace = new Vector[STATESPACE_SIZE];
-					for (int i = 0; i < STATESPACE_SIZE; i++) {
-						statespace[i] = new Vector();
-						statespace[i].value = "w" + i;
-					}
+		final Vector[] statespace = new Vector[STATESPACE_SIZE];
+		for (int i = 0; i < STATESPACE_SIZE; i++) {
+			statespace[i] = new Vector();
+			statespace[i].value = "w" + i;
+		}
 
-					final int NUM_OF_THREADS = THREADCOUNTS[run]; //powers of 2
-					System.out.printf("Starting run #%d on %d threads (System: %s)\n", run, NUM_OF_THREADS, BenchmarkResult.system);
-					final CyclicBarrier barrier = new CyclicBarrier(NUM_OF_THREADS + 1);
-					final Thread[] threads = new Thread[NUM_OF_THREADS];
-					int from = 0;
-					for (int threadNo = 0; threadNo < NUM_OF_THREADS; threadNo++) {
-						class Work implements Runnable {
+		for (int run = 0; run < THREADCOUNTS.length; run++) {
+			final AbstractFastSet s; //Note: virtual dispatch appears to be slightly slower
+			switch (MAP_TYPE) {
+				case FASTSET:
+					s = new FastSet(STATESPACE_SIZE * FREE_FACTOR);
+					break;
+				case CONCURRENT_HASHMAP:
+					s = new HashtableWrapper(new ConcurrentHashMap<Vector, Vector>(STATESPACE_SIZE * FREE_FACTOR));
+					break;
+				case HASHTABLE:
+					s = new HashtableWrapper(new Hashtable<Vector, Vector>(STATESPACE_SIZE * FREE_FACTOR));
+					break;
+				case NONBLOCKING_HASHMAP:
+					s = new HashtableWrapper(new NonBlockingHashMap<Vector, Vector>(STATESPACE_SIZE * FREE_FACTOR));
+					break;
+				case LOCKLESS_HASHTABLE:
+					s = new HashtableWrapper(new nl.utwente.csc.fmt.locklesshashtable.generalhashtable.NonBlockingHashMap<Vector,Vector>(STATESPACE_SIZE * FREE_FACTOR));
+					break;
+				default:
+					throw new IllegalArgumentException("No such map type");
+			}
 
-							public Vector[] unprocessed = null;
-							public int workSize = 0;
+			try{
+				final int NUM_OF_THREADS = THREADCOUNTS[run]; //powers of 2
+				System.out.printf("Starting run #%d on %d threads (System: %s)\n", run, NUM_OF_THREADS, BenchmarkResult.system);
+				final CyclicBarrier barrier = new CyclicBarrier(NUM_OF_THREADS + 1);
+				final Thread[] threads = new Thread[NUM_OF_THREADS];
+				int from = 0;
+				for (int threadNo = 0; threadNo < NUM_OF_THREADS; threadNo++) {
+					class Work implements Runnable {
 
-							public Work(Vector[] data) {
-								this.unprocessed = data;
-								this.workSize = data.length;
+						public Vector[] unprocessed = null;
+						public int workSize = 0;
+
+						public Work(Vector[] data) {
+							this.unprocessed = data;
+							this.workSize = data.length;
+						}
+
+						@Override
+						public void run() {
+							try {
+								barrier.await(360, TimeUnit.SECONDS);
+							} catch (InterruptedException | BrokenBarrierException | TimeoutException e) {
+								e.printStackTrace();
 							}
+							logV("starting thread-" + Thread.currentThread().getName());
 
-							@Override
-							public void run() {
-								try {
-									barrier.await(360, TimeUnit.SECONDS);
-								} catch (InterruptedException | BrokenBarrierException | TimeoutException e) {
-									e.printStackTrace();
-								}
-								logV("starting thread-" + Thread.currentThread().getName());
-
-								for (int i = 0; i < workSize; i++) {
-									boolean found = s.findOrPut(unprocessed[i]); // if false, data is put
+							for (int i = 0; i < workSize; i++) {
+								boolean found = s.findOrPut(unprocessed[i]); // if false, data is put
 //									if (!Logger.NO_LOGGING) {
 //										logV("found:" + found + " for " + unprocessed[i].toString());
 //									}
-								}
 							}
 						}
-
-						from %= STATESPACE_SIZE;
-						final int toTake = (int) ((STATESPACE_SIZE / NUM_OF_THREADS) + (STATESPACE_OVERLAP * STATESPACE_SIZE));
-						Vector[] vs = new Vector[toTake];
-						from = take(statespace,from,toTake,vs);
-						final Work work = new Work(vs);
-
-						Thread worker = new Thread(work);
-						worker.setName("worker-" + threadNo);
-						threads[threadNo] = worker;
 					}
 
-					for (Thread worker : threads) {
-						worker.start();
-					}
+					from %= STATESPACE_SIZE;
+					final int toTake = (int) ((STATESPACE_SIZE / NUM_OF_THREADS) + (STATESPACE_OVERLAP * STATESPACE_SIZE));
+					Vector[] vs = new Vector[toTake];
+					from = take(statespace,from,toTake,vs);
+					final Work work = new Work(vs);
 
-					System.gc();
+					Thread worker = new Thread(work);
+					worker.setName("worker-" + threadNo);
+					threads[threadNo] = worker;
+				}
+
+				for (Thread worker : threads) {
+					worker.start();
+				}
+
+				System.gc();
+				try {
+					Thread.sleep(1000);
+					barrier.await(360, TimeUnit.SECONDS);
+				} catch (InterruptedException | BrokenBarrierException | TimeoutException e1) {
+					e1.printStackTrace();
+				}
+
+				long startMs = System.currentTimeMillis();
+
+				for (Thread thread : threads) {
 					try {
-						Thread.sleep(1000);
-						barrier.await(360, TimeUnit.SECONDS);
-					} catch (InterruptedException | BrokenBarrierException | TimeoutException e1) {
-						e1.printStackTrace();
-					}
-
-					long startMs = System.currentTimeMillis();
-
-					for (Thread thread : threads) {
-						try {
-							thread.join();
-						} catch (InterruptedException e) {
-							e.printStackTrace();
-						}
-					}
-
-					long endMs = System.currentTimeMillis();
-					long diffMs = endMs - startMs;
-					double diffSeconds = diffMs / 1000f;
-
-					int insertedCounter = 0;
-					Vector[] resultData = s.getData();
-					HashSet<Vector> tmpSet = new HashSet<Vector>(resultData.length);
-					for (int i = 0; i < resultData.length; i++) {
-						if (resultData[i].value != null) {
-							insertedCounter++;
-							boolean inserted = tmpSet.add(resultData[i]);
-							if(!inserted){
-								System.out.printf("Element %d with value %s exists!\n", i, resultData[i]);
-							}
-						}
-						if (!Logger.NO_LOGGING) {
-							logV("data " + i + ":\t" + resultData[i]);
-						}
-					}
-
-//				printMemoryStatistics();
-					benchmarkResults[run] = new BenchmarkResult(run, STATESPACE_SIZE, diffSeconds, NUM_OF_THREADS, insertedCounter);
-					benchmarkResults[run].mapImplementation = s.toString();
-					benchmarkResults[run].freeFactor = FREE_FACTOR;
-					if (insertedCounter != STATESPACE_SIZE) {
-						System.out.println("insertedCounter == "+insertedCounter + " STATESPACE_SIZE=="+STATESPACE_SIZE);
-						throw new AssertionError("insertedCounter != STATESPACE_SIZE");
-					}
-				}catch(Exception e) {
-					e.printStackTrace();
-				}finally{
-					if(s != null) {
-						s.cleanup();
+						thread.join();
+					} catch (InterruptedException e) {
+						e.printStackTrace();
 					}
 				}
+
+				long endMs = System.currentTimeMillis();
+				long diffMs = endMs - startMs;
+				double diffSeconds = diffMs / 1000f;
+
+				int insertedCounter = 0;
+				Vector[] resultData = s.getData();
+				HashSet<Vector> tmpSet = new HashSet<Vector>(resultData.length);
+				for (int i = 0; i < resultData.length; i++) {
+					if (resultData[i].value != null) {
+						insertedCounter++;
+						boolean inserted = tmpSet.add(resultData[i]);
+						if(!inserted){
+							System.out.printf("Element %d with value %s exists!\n", i, resultData[i]);
+						}
+					}
+					if (!Logger.NO_LOGGING) {
+						logV("data " + i + ":\t" + resultData[i]);
+					}
+				}
+
+//				printMemoryStatistics();
+				benchmarkResults[run] = new BenchmarkResult(run, STATESPACE_SIZE, diffSeconds, NUM_OF_THREADS, insertedCounter);
+				benchmarkResults[run].mapImplementation = s.toString();
+				benchmarkResults[run].freeFactor = FREE_FACTOR;
+				if (insertedCounter != STATESPACE_SIZE) {
+					System.out.println("insertedCounter == "+insertedCounter + " STATESPACE_SIZE=="+STATESPACE_SIZE);
+					throw new Exception("insertedCounter != STATESPACE_SIZE");
+				}
+			}catch(Exception e) {
+				e.printStackTrace();
+			}finally{
+				if(s != null) {
+					s.cleanup();
+				}
 			}
+		}
 
 		return benchmarkResults;
 	}
