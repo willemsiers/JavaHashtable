@@ -27,7 +27,8 @@ public class Main {
 		FASTSET,
 		CONCURRENT_HASHMAP,
 		NONBLOCKING_HASHMAP,
-		HASHTABLE
+		HASHTABLE,
+		LOCKLESS_HASHTABLE
 	};
 
 	public static void main(String[] args) throws InterruptedException {
@@ -49,10 +50,11 @@ public class Main {
 		try {
 			for (int freeFactor : FREE_FACTORS) {
 				System.out.println("Starting benchmarks with FREE_FACTOR: " + freeFactor);
+				results.add(performBenchmark(MapType.LOCKLESS_HASHTABLE, freeFactor));
 				results.add(performBenchmark(MapType.CONCURRENT_HASHMAP, freeFactor));
+				results.add(performBenchmark(MapType.FASTSET, freeFactor));
 				results.add(performBenchmark(MapType.HASHTABLE, freeFactor));
 				results.add(performBenchmark(MapType.NONBLOCKING_HASHMAP, freeFactor));
-				results.add(performBenchmark(MapType.FASTSET, freeFactor));
 			}
 		}catch(Exception e) {
 			e.printStackTrace();
@@ -102,6 +104,9 @@ public class Main {
 						break;
 					case NONBLOCKING_HASHMAP:
 						s = new HashtableWrapper(new NonBlockingHashMap<Vector, Vector>(STATESPACE_SIZE * FREE_FACTOR));
+						break;
+					case LOCKLESS_HASHTABLE:
+						s = new HashtableWrapper(new nl.utwente.csc.fmt.locklesshashtable.generalhashtable.NonBlockingHashMap<Vector,Vector>(STATESPACE_SIZE * FREE_FACTOR));
 						break;
 					default:
 						throw new IllegalArgumentException("No such map type");

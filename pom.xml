@@ -31,10 +31,5 @@
       <artifactId>high-scale-lib</artifactId>
       <version>1.0.6</version>
     </dependency>
-  	<dependency>
-  		<groupId>nl.utwente.csc.fmt</groupId>
-  		<artifactId>lockless-hashtable</artifactId>
-  		<version>1.0.0</version>
-  	</dependency>
   </dependencies>
 </project>
