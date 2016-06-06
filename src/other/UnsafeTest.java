@@ -9,7 +9,7 @@ public class UnsafeTest {
 	long a = 0;
 	long b = 0;
 
-	public UnsafeTest(int size) {
+	public UnsafeTest(final int size) {
 		final int LONG_SIZE_BYTES = 8;
 		Unsafe unsafe = null;
 		try {
@@ -29,7 +29,7 @@ public class UnsafeTest {
 			} catch (NoSuchFieldException e) {
 				e.printStackTrace();
 			}
-			long arrayBase = unsafe.allocateMemory(size * LONG_SIZE_BYTES);
+			final long arrayBase = unsafe.allocateMemory(size * LONG_SIZE_BYTES);
 			unsafe.setMemory(arrayBase, size * LONG_SIZE_BYTES, (byte) 0);
 //         boolean success = unsafe.compareAndSwapLong(this, aOffset, 0, 4);
 			for (int offset = 0; offset < size; offset++) {
@@ -41,7 +41,7 @@ public class UnsafeTest {
 				System.out.printf("offset %d, value %d\n", offset, value);
 			}
 
-			Unsafe finalUnsafe = unsafe;
+			final Unsafe finalUnsafe = unsafe;
 			final Object nullObj = (Object) null; //memory base
 			for (int i = 0; i < 4; i++) {
 				new Thread(new Runnable() {
