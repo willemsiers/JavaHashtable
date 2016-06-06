@@ -69,34 +69,17 @@ public class FastSet implements AbstractFastSet{
 	}
 
 	public static int stringHash(String s, int iteration) {
-		return s.hashCode() * iteration;
-
-
-		/** See https://github.com/boundary/high-scale-lib/blob/master/src/main/java/org/cliffc/high_scale_lib/NonBlockingHashMap.java
-		     h += (h <<  15) ^ 0xffffcd7d;
-			 h ^= (h >>> 10);
-			 h += (h <<   3);
-			 h ^= (h >>>  6);
-			 h += (h <<   2) + (h << 14);
-			 return h ^ (h >>> 16);
-		 */
-
 		// TODO: better hash function
-		/**
-		 * Based on s[0]*31^(n-1) + s[1]*31^(n-2) + ... + s[n-1]
-		 **/
-//		int hash = 0;
-//		int prime = Primes.primes[iteration + 10];
-//		int length = s.length();
-//		byte[] chars = s.toCharArray();
-//		for (int i = 0; i < length; i++) {
-//			long h = (long) (chars[i] * Math.pow((double) prime, (double) length - 1));
-//			hash += (int) h;
-//		}
-//		if(iteration == 1){
-//			System.out.println(hash);
-//		}
-//		return hash;
+		int h = s.hashCode();
+
+		// See https://github.com/boundary/high-scale-lib/blob/master/src/main/java/org/cliffc/high_scale_lib/NonBlockingHashMap.java
+        h += (h <<  15) ^ 0xffffcd7d;
+        h*=iteration;//mine
+        h ^= (h >>> 10);
+        h += (h <<   3);
+        h ^= (h >>>  6);
+        h += (h <<   2) + (h << 14);
+        return h ^ (h >>> 16);
 	}
 
 	public static boolean isBucketEmpty(long bucketValue) {
