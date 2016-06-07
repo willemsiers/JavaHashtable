@@ -6,7 +6,6 @@ import other.Logger;
 
 import java.io.IOException;
 import java.io.InputStream;
-import java.text.SimpleDateFormat;
 import java.util.*;
 import java.util.concurrent.*;
 
@@ -15,7 +14,7 @@ import static other.Logger.logV;
 //NOTE: run with jvm arguments to increase heap size if necessary, for example: -Xms512m -Xmx6g
 public class Main {
 
-	static final float STATESPACE_OVERLAP =  1f;
+	static final float STATESPACE_OVERLAP =  2f; //1f means every element is only inserted once, 2f means only half the inserted values is unique, etc...
 	//FREE_FACTOR: how much to over-allocate in the hashtable (determines load-factor)
 	static final int[] FREE_FACTORS = {2,4};
 	//Total insertion attempts will be STATESPACE_SIZE * STATESPACE_OVERLAP, where STATESPACE_SIZE insertions have "unique" data
@@ -54,19 +53,19 @@ public class Main {
 				results.add(performBenchmark(MapType.CONCURRENT_HASHMAP, freeFactor));
 				results.add(performBenchmark(MapType.FASTSET, freeFactor));
 				results.add(performBenchmark(MapType.HASHTABLE, freeFactor));
-				results.add(performBenchmark(MapType.NONBLOCKING_HASHMAP, freeFactor));
+//				results.add(performBenchmark(MapType.NONBLOCKING_HASHMAP, freeFactor));
 			}
 		}catch(Exception e) {
 			e.printStackTrace();
 		}finally {
 			printResults(results);
+			results.clear(); //prevent shutdown hook from printing results
 		}
 	}
 
 	private static void printResults(ArrayList<BenchmarkResult[]> results) {
 		for (BenchmarkResult[] resultSet : results) {
 			for (BenchmarkResult result : resultSet) {
-				System.out.printf("Benchmark results for %s at %s (System: %s), Free-factor: %d, Overlap: %f\n", result.mapImplementation, new SimpleDateFormat("HH:mm yyyy-MM-dd").format(new Date()), BenchmarkResult.system, result.freeFactor, STATESPACE_OVERLAP);
 
 				//first determine value that has speedup of exactly 1, assumes THREADCOUNTS is incremental
 				int lastIndexLowestThreaded = 0;
@@ -75,11 +74,9 @@ public class Main {
 					lastIndexLowestThreaded++;
 				}
 
-				System.out.println();
 				if (result != null) {
 					if (resultSet[lastIndexLowestThreaded] != null) {
 						result.speedup = resultSet[lastIndexLowestThreaded].diffSeconds / result.diffSeconds;
-						result.relSpeedup = result.speedup / result.num_of_threads;
 					}
 					System.out.println(result.toString());
 				}
@@ -113,8 +110,8 @@ public class Main {
 					s = new HashtableWrapper(new NonBlockingHashMap<Vector, Vector>(STATESPACE_SIZE * FREE_FACTOR));
 					break;
 				case LOCKLESS_HASHTABLE:
-					s = new HashtableWrapper(new nl.utwente.csc.fmt.locklesshashtable.generalhashtable.NonBlockingHashMap<Vector,Vector>(STATESPACE_SIZE * FREE_FACTOR));
-					break;
+//					s = new HashtableWrapper(new nl.utwente.csc.fmt.locklesshashtable.spehashtable.Hashtable(STATESPACE_SIZE * FREE_FACTOR));
+//					break;
 				default:
 					throw new IllegalArgumentException("No such map type");
 			}
@@ -143,9 +140,10 @@ public class Main {
 							} catch (InterruptedException | BrokenBarrierException | TimeoutException e) {
 								e.printStackTrace();
 							}
-							logV("starting thread-" + Thread.currentThread().getName());
+							logV(String.format("starting thread-%s with worksize %d", Thread.currentThread().getName(), workSize));
 
 							for (int i = 0; i < workSize; i++) {
+//								int workIt = fib(10);
 								boolean found = s.findOrPut(unprocessed[i]); // if false, data is put
 //									if (!Logger.NO_LOGGING) {
 //										logV("found:" + found + " for " + unprocessed[i].toString());
@@ -155,7 +153,7 @@ public class Main {
 					}
 
 					from %= STATESPACE_SIZE;
-					final int toTake = (int) ((STATESPACE_SIZE / NUM_OF_THREADS) + (STATESPACE_OVERLAP * STATESPACE_SIZE));
+					final int toTake = (int) ((STATESPACE_SIZE / NUM_OF_THREADS) * STATESPACE_OVERLAP);
 					Vector[] vs = new Vector[toTake];
 					from = take(statespace,from,toTake,vs);
 					final Work work = new Work(vs);
@@ -208,7 +206,7 @@ public class Main {
 				}
 
 //				printMemoryStatistics();
-				benchmarkResults[run] = new BenchmarkResult(run, STATESPACE_SIZE, diffSeconds, NUM_OF_THREADS, insertedCounter);
+				benchmarkResults[run] = new BenchmarkResult(run, STATESPACE_SIZE, diffSeconds, NUM_OF_THREADS, insertedCounter,STATESPACE_OVERLAP);
 				benchmarkResults[run].mapImplementation = s.toString();
 				benchmarkResults[run].freeFactor = FREE_FACTOR;
 				if (insertedCounter != STATESPACE_SIZE) {
@@ -225,6 +223,14 @@ public class Main {
 		}
 
 		return benchmarkResults;
+	}
+
+	private static int fib(int n){
+		if(n == 1 || n == 2){
+			return 1;
+		}else {
+			return fib(n - 1) + fib(n - 2);
+		}
 	}
 
 	public static String getHostname() {
