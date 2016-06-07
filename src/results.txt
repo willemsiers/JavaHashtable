@@ -587,3 +587,37 @@ run#=14	threadCnt=16	time=0.2180	statespace=262144	insertedCnt=262144	speedup=0.
 run#=15	threadCnt=32	time=0.3720	statespace=262144	insertedCnt=262144	speedup=0.204	relSpeedup=0.006
 run#=16	threadCnt=32	time=0.3800	statespace=262144	insertedCnt=262144	speedup=0.200	relSpeedup=0.006
 run#=17	threadCnt=32	time=0.3540	statespace=262144	insertedCnt=262144	speedup=0.215	relSpeedup=0.007
+
+===FIX thread work slicing... :S
+/usr/lib/jvm/java-8-openjdk-amd64/bin/java -Dvisualvm.id=1434294433288 -Xms512m -Xmx6g -Didea.launcher.port=7532 -Didea.launcher.bin.path=/home/willem/Programs/idea-IU-145.972.3/bin -Dfile.encoding=UTF-8 -classpath /home/willem/dev/fast_set_java/target/classes:/usr/lib/jvm/java-8-openjdk-amd64/jre/lib/charsets.jar:/usr/lib/jvm/java-8-openjdk-amd64/jre/lib/ext/cldrdata.jar:/usr/lib/jvm/java-8-openjdk-amd64/jre/lib/ext/dnsns.jar:/usr/lib/jvm/java-8-openjdk-amd64/jre/lib/ext/icedtea-sound.jar:/usr/lib/jvm/java-8-openjdk-amd64/jre/lib/ext/jaccess.jar:/usr/lib/jvm/java-8-openjdk-amd64/jre/lib/ext/localedata.jar:/usr/lib/jvm/java-8-openjdk-amd64/jre/lib/ext/nashorn.jar:/usr/lib/jvm/java-8-openjdk-amd64/jre/lib/ext/sunec.jar:/usr/lib/jvm/java-8-openjdk-amd64/jre/lib/ext/sunjce_provider.jar:/usr/lib/jvm/java-8-openjdk-amd64/jre/lib/ext/sunpkcs11.jar:/usr/lib/jvm/java-8-openjdk-amd64/jre/lib/ext/zipfs.jar:/usr/lib/jvm/java-8-openjdk-amd64/jre/lib/jce.jar:/usr/lib/jvm/java-8-openjdk-amd64/jre/lib/jsse.jar:/usr/lib/jvm/java-8-openjdk-amd64/jre/lib/management-agent.jar:/usr/lib/jvm/java-8-openjdk-amd64/jre/lib/resources.jar:/usr/lib/jvm/java-8-openjdk-amd64/jre/lib/rt.jar:/home/willem/Programs/idea-IU-145.972.3/lib/junit-4.12.jar:/usr/share/java/hamcrest-core.jar:/home/willem/Programs/idea-IU-145.972.3/redist/annotations-java8.jar:/home/willem/.m2/repository/com/boundary/high-scale-lib/1.0.6/high-scale-lib-1.0.6.jar:/home/willem/.m2/repository/com/lexicalscope/jewelcli/jewelcli/0.8.9/jewelcli-0.8.9.jar:/home/willem/dev/fast_set_java/libs/lockless-hashtable.jar:/home/willem/Programs/idea-IU-145.972.3/lib/idea_rt.jar com.intellij.rt.execution.application.AppMain hashtable.Main
+Max memory: 5461 MB
+Starting benchmarks with FREE_FACTOR: 2
+perform benchmark with FASTSET
+Starting run #0 on 1 threads (System: wiTu)
+starting thread-worker-0 with worksize 16777216
+Starting run #1 on 1 threads (System: wiTu)
+starting thread-worker-0 with worksize 16777216
+Starting run #2 on 1 threads (System: wiTu)
+starting thread-worker-0 with worksize 16777216
+Starting run #3 on 1 threads (System: wiTu)
+starting thread-worker-0 with worksize 16777216
+Starting run #4 on 2 threads (System: wiTu)
+starting thread-worker-0 with worksize 8388608
+starting thread-worker-1 with worksize 8388608
+Starting run #5 on 2 threads (System: wiTu)
+starting thread-worker-0 with worksize 8388608
+starting thread-worker-1 with worksize 8388608
+Starting run #6 on 2 threads (System: wiTu)
+starting thread-worker-0 with worksize 8388608
+starting thread-worker-1 with worksize 8388608
+Starting run #7 on 2 threads (System: wiTu)
+starting thread-worker-1 with worksize 8388608
+starting thread-worker-0 with worksize 8388608
+type=FastSet run#=0 threads=1 time=1.7480 statespace=8388608 freefactor=2 inserted=8388608 speedup=0.899 date=13:07 2016-06-07 host=wiTu overlap=2.0
+type=FastSet run#=1 threads=1 time=1.5570 statespace=8388608 freefactor=2 inserted=8388608 speedup=1.009 date=13:07 2016-06-07 host=wiTu overlap=2.0
+type=FastSet run#=2 threads=1 time=1.5590 statespace=8388608 freefactor=2 inserted=8388608 speedup=1.008 date=13:07 2016-06-07 host=wiTu overlap=2.0
+type=FastSet run#=3 threads=1 time=1.5710 statespace=8388608 freefactor=2 inserted=8388608 speedup=1.000 date=13:07 2016-06-07 host=wiTu overlap=2.0
+type=FastSet run#=4 threads=2 time=1.1290 statespace=8388608 freefactor=2 inserted=8388608 speedup=1.391 date=13:07 2016-06-07 host=wiTu overlap=2.0
+type=FastSet run#=5 threads=2 time=0.9380 statespace=8388608 freefactor=2 inserted=8388608 speedup=1.675 date=13:07 2016-06-07 host=wiTu overlap=2.0
+type=FastSet run#=6 threads=2 time=0.9070 statespace=8388608 freefactor=2 inserted=8388608 speedup=1.732 date=13:07 2016-06-07 host=wiTu overlap=2.0
+type=FastSet run#=7 threads=2 time=0.9190 statespace=8388608 freefactor=2 inserted=8388608 speedup=1.709 date=13:07 2016-06-07 host=wiTu overlap=2.0
