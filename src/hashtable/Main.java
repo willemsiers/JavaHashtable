@@ -18,7 +18,7 @@ public class Main {
 	//FREE_FACTOR: how much to over-allocate in the hashtable (determines load-factor)
 	static final int[] FREE_FACTORS = {2,4};
 	//Total insertion attempts will be STATESPACE_SIZE * STATESPACE_OVERLAP, where STATESPACE_SIZE insertions have "unique" data
-	static final int STATESPACE_SIZE = (int) Math.pow(2, 20) / FREE_FACTORS[FREE_FACTORS.length-1]; //assuming FREE_FACTORS has largest value at the end
+	static final int STATESPACE_SIZE = (int) Math.pow(2, 25) / FREE_FACTORS[FREE_FACTORS.length-1]; //assuming FREE_FACTORS has largest value at the end
 	//THREADCOUNTS: for each entry a benchmark will be performed using this many threads
 	static final int[] THREADCOUNTS = {
 			1,  1,  1,  1,  1,  1,  1,  1,
