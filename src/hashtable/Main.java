@@ -18,9 +18,9 @@ public class Main {
 	//FREE_FACTOR: how much to over-allocate in the hashtable (determines load-factor)
 	static final int[] FREE_FACTORS = {2,4};
 	//Total insertion attempts will be STATESPACE_SIZE * STATESPACE_OVERLAP, where STATESPACE_SIZE insertions have "unique" data
-	static final int STATESPACE_SIZE = (int) Math.pow(2, 14) / FREE_FACTORS[FREE_FACTORS.length-1]; //assuming FREE_FACTORS has largest value at the end
+	static final int STATESPACE_SIZE = (int) Math.pow(2, 24) / FREE_FACTORS[FREE_FACTORS.length-1]; //assuming FREE_FACTORS has largest value at the end
 	//THREADCOUNTS: for each entry a benchmark will be performed using this many threads
-	static final int[] THREADCOUNTS = {1,1,1,1,2,2,2,2,4,4,4,4,8,8,8,8,16,16,16,16};
+	static final int[] THREADCOUNTS = {1,1,1,1,1,2,2,2,2,2};
 
 	public enum MapType {
 		FASTSET,
@@ -49,10 +49,10 @@ public class Main {
 		try {
 			for (int freeFactor : FREE_FACTORS) {
 				System.out.println("Starting benchmarks with FREE_FACTOR: " + freeFactor);
-				results.add(performBenchmark(MapType.LOCKLESS_HASHTABLE, freeFactor));
-				results.add(performBenchmark(MapType.CONCURRENT_HASHMAP, freeFactor));
+//				results.add(performBenchmark(MapType.LOCKLESS_HASHTABLE, freeFactor));
+//				results.add(performBenchmark(MapType.CONCURRENT_HASHMAP, freeFactor));
 				results.add(performBenchmark(MapType.FASTSET, freeFactor));
-				results.add(performBenchmark(MapType.HASHTABLE, freeFactor));
+//				results.add(performBenchmark(MapType.HASHTABLE, freeFactor));
 //				results.add(performBenchmark(MapType.NONBLOCKING_HASHMAP, freeFactor));
 			}
 		}catch(Exception e) {
@@ -88,29 +88,29 @@ public class Main {
 		System.out.println("perform benchmark with "+MAP_TYPE.toString());
 		BenchmarkResult[] benchmarkResults = new BenchmarkResult[THREADCOUNTS.length];
 
-		final Vector[] statespace = new Vector[STATESPACE_SIZE];
+		final String[] statespace = new String[STATESPACE_SIZE];
 		for (int i = 0; i < STATESPACE_SIZE; i++) {
-			statespace[i] = new Vector();
-			statespace[i].value = "w" + i;
+//			statespace[i] = new String();
+			statespace[i] = "w" + i;
 		}
 
 		for (int run = 0; run < THREADCOUNTS.length; run++) {
-			final AbstractFastSet<Vector> s; //Note: virtual dispatch appears to be slightly slower
+			final AbstractFastSet<String> s; //Note: virtual dispatch appears to be slightly slower
 			switch (MAP_TYPE) {
 				case FASTSET:
-					s = new FastSet<Vector>(STATESPACE_SIZE * FREE_FACTOR, Vector.class);
+					s = new FastSet<String>(STATESPACE_SIZE * FREE_FACTOR, String.class);
 					break;
 				case CONCURRENT_HASHMAP:
-					s = new HashtableWrapper<Vector>(new ConcurrentHashMap<Vector, Vector>(STATESPACE_SIZE * FREE_FACTOR));
+					s = new HashtableWrapper<String>(new ConcurrentHashMap<String, String>(STATESPACE_SIZE * FREE_FACTOR));
 					break;
 				case HASHTABLE:
-					s = new HashtableWrapper<Vector>(new Hashtable<Vector, Vector>(STATESPACE_SIZE * FREE_FACTOR));
+					s = new HashtableWrapper<String>(new Hashtable<String, String>(STATESPACE_SIZE * FREE_FACTOR));
 					break;
 				case NONBLOCKING_HASHMAP:
-					s = new HashtableWrapper<Vector>(new NonBlockingHashMap<Vector, Vector>(STATESPACE_SIZE * FREE_FACTOR));
+					s = new HashtableWrapper<String>(new NonBlockingHashMap<String, String>(STATESPACE_SIZE * FREE_FACTOR));
 					break;
 				case LOCKLESS_HASHTABLE:
-//					s = new HashtableWrapper<Vector>(new nl.utwente.csc.fmt.locklesshashtable.spehashtable.Hashtable(STATESPACE_SIZE * FREE_FACTOR));
+//					s = new HashtableWrapper<String>(new nl.utwente.csc.fmt.locklesshashtable.spehashtable.Hashtable(STATESPACE_SIZE * FREE_FACTOR));
 //					break;
 				default:
 					throw new IllegalArgumentException("No such map type");
@@ -125,10 +125,10 @@ public class Main {
 				for (int threadNo = 0; threadNo < NUM_OF_THREADS; threadNo++) {
 					class Work implements Runnable {
 
-						public Vector[] unprocessed = null;
+						public String[] unprocessed = null;
 						public int workSize = 0;
 
-						public Work(Vector[] data) {
+						public Work(String[] data) {
 							this.unprocessed = data;
 							this.workSize = data.length;
 						}
@@ -154,7 +154,7 @@ public class Main {
 
 					from %= STATESPACE_SIZE;
 					final int toTake = (int) ((STATESPACE_SIZE / NUM_OF_THREADS) * STATESPACE_OVERLAP);
-					Vector[] vs = new Vector[toTake];
+					String[] vs = new String[toTake];
 					from = take(statespace,from,toTake,vs);
 					final Work work = new Work(vs);
 
@@ -190,11 +190,11 @@ public class Main {
 				double diffSeconds = diffMs / 1000f;
 
 				int insertedCounter = 0;
-				List<Vector> vectors = Arrays.<Vector>asList(s.getData());
-				Vector[] resultData = vectors.toArray(new Vector[vectors.size()]);
-				HashSet<Vector> tmpSet = new HashSet<Vector>(resultData.length);
+				List<String> vectors = Arrays.<String>asList(s.getData());
+				String[] resultData = vectors.toArray(new String[vectors.size()]);
+				HashSet<String> tmpSet = new HashSet<String>(resultData.length);
 				for (int i = 0; i < resultData.length; i++) {
-					if (resultData[i].value != null) {
+					if (resultData[i] != null && !resultData[i].equals("")) {
 						insertedCounter++;
 						boolean inserted = tmpSet.add(resultData[i]);
 						if(!inserted){
@@ -266,7 +266,7 @@ public class Main {
 		System.out.printf("Max memory: %d MB\n",rt.maxMemory() / (1024*1024));
 	}
 
-	private static int take(Vector[] src, final int startIndex, int n, Vector[] dst){
+	private static int take(String[] src, final int startIndex, int n, String[] dst){
 		if(dst.length != n) {
 			throw new IllegalArgumentException("dst[] is not large enough");
 		}
