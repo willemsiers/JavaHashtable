@@ -26,7 +26,7 @@ public class BenchmarkResult {
 
 	@Override
 	public String toString() {
-		String dateString = new SimpleDateFormat("HH:mm yyyy-MM-dd").format(new Date());
+		String dateString = new SimpleDateFormat("HH:mm,yyyy-MM-dd").format(new Date());
 		return String.format(
 				"type=%s" +
 				" run#=%d" +
