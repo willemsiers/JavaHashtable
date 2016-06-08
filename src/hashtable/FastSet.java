@@ -40,16 +40,20 @@ public class FastSet<V> implements AbstractFastSet<V>{
 			Field f = Unsafe.class.getDeclaredField("theUnsafe");
 			f.setAccessible(true);
 			defUnsafe = (Unsafe) f.get(null);
+		} catch (NoSuchFieldException | IllegalAccessException e) {
+			defUnsafe = null;
+			e.printStackTrace();
+		}
+		this.unsafe = defUnsafe;
 
-			this.unsafe = defUnsafe;
-			if (this.unsafe == null) {
-				throw new NullPointerException("\"Unsafe\" isn't initialized");
-			}
+		if (this.unsafe == null) {
+			throw new NullPointerException("\"Unsafe\" isn't initialized");
+		}
 
+		try{
 			indicesBase = unsafe.allocateMemory(this.size * KEY_SIZE_BYTES);
 			this.clear(type);
-		} catch (NoSuchFieldException | InstantiationException| IllegalAccessException e ) {
-			defUnsafe = null;
+		} catch ( InstantiationException| IllegalAccessException e ) {
 			e.printStackTrace();
 			throw new NullPointerException("FastSet couldn't be initialized");
 		}
@@ -61,16 +65,16 @@ public class FastSet<V> implements AbstractFastSet<V>{
 		}
 		this.unsafe.setMemory(indicesBase, this.size * LONG_SIZE_BYTES, (byte) 0);
 		for (int i = 0; i < data.length; i++) { //slow, but effective
-			data[i] = (V)type.newInstance();
+//			data[i] = (V)type.newInstance();
 		}
 //        Arrays.fill(data, null);
 	}
 
 	public static final int rehashInt(int h, int iteration) {
 		// TODO: better hash function
+		h+=(iteration<<4); //mine
 		// See https://github.com/boundary/high-scale-lib/blob/master/src/main/java/org/cliffc/high_scale_lib/NonBlockingHashMap.java
         h += (h <<  15) ^ 0xffffcd7d;
-        h*=iteration;//mine
         h ^= (h >>> 10);
         h += (h <<   3);
         h ^= (h >>>  6);
