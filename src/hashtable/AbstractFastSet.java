@@ -1,9 +1,9 @@
 package hashtable;
 
-public interface AbstractFastSet {
-	boolean findOrPut(Vector v);
+public interface AbstractFastSet<V> {
+	boolean findOrPut(V v);
 
-	Vector[] getData();
+	V[] getData();
 
 	void cleanup();
 }

@@ -95,22 +95,22 @@ public class Main {
 		}
 
 		for (int run = 0; run < THREADCOUNTS.length; run++) {
-			final AbstractFastSet s; //Note: virtual dispatch appears to be slightly slower
+			final AbstractFastSet<Vector> s; //Note: virtual dispatch appears to be slightly slower
 			switch (MAP_TYPE) {
 				case FASTSET:
-					s = new FastSet(STATESPACE_SIZE * FREE_FACTOR);
+					s = new FastSet<Vector>(STATESPACE_SIZE * FREE_FACTOR, Vector.class);
 					break;
 				case CONCURRENT_HASHMAP:
-					s = new HashtableWrapper(new ConcurrentHashMap<Vector, Vector>(STATESPACE_SIZE * FREE_FACTOR));
+					s = new HashtableWrapper<Vector>(new ConcurrentHashMap<Vector, Vector>(STATESPACE_SIZE * FREE_FACTOR));
 					break;
 				case HASHTABLE:
-					s = new HashtableWrapper(new Hashtable<Vector, Vector>(STATESPACE_SIZE * FREE_FACTOR));
+					s = new HashtableWrapper<Vector>(new Hashtable<Vector, Vector>(STATESPACE_SIZE * FREE_FACTOR));
 					break;
 				case NONBLOCKING_HASHMAP:
-					s = new HashtableWrapper(new NonBlockingHashMap<Vector, Vector>(STATESPACE_SIZE * FREE_FACTOR));
+					s = new HashtableWrapper<Vector>(new NonBlockingHashMap<Vector, Vector>(STATESPACE_SIZE * FREE_FACTOR));
 					break;
 				case LOCKLESS_HASHTABLE:
-//					s = new HashtableWrapper(new nl.utwente.csc.fmt.locklesshashtable.spehashtable.Hashtable(STATESPACE_SIZE * FREE_FACTOR));
+//					s = new HashtableWrapper<Vector>(new nl.utwente.csc.fmt.locklesshashtable.spehashtable.Hashtable(STATESPACE_SIZE * FREE_FACTOR));
 //					break;
 				default:
 					throw new IllegalArgumentException("No such map type");
@@ -190,7 +190,8 @@ public class Main {
 				double diffSeconds = diffMs / 1000f;
 
 				int insertedCounter = 0;
-				Vector[] resultData = s.getData();
+				List<Vector> vectors = Arrays.<Vector>asList(s.getData());
+				Vector[] resultData = vectors.toArray(new Vector[vectors.size()]);
 				HashSet<Vector> tmpSet = new HashSet<Vector>(resultData.length);
 				for (int i = 0; i < resultData.length; i++) {
 					if (resultData[i].value != null) {
