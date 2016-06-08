@@ -18,16 +18,24 @@ public class Main {
 	//FREE_FACTOR: how much to over-allocate in the hashtable (determines load-factor)
 	static final int[] FREE_FACTORS = {2,4};
 	//Total insertion attempts will be STATESPACE_SIZE * STATESPACE_OVERLAP, where STATESPACE_SIZE insertions have "unique" data
-	static final int STATESPACE_SIZE = (int) Math.pow(2, 24) / FREE_FACTORS[FREE_FACTORS.length-1]; //assuming FREE_FACTORS has largest value at the end
+	static final int STATESPACE_SIZE = (int) Math.pow(2, 25) / FREE_FACTORS[FREE_FACTORS.length-1]; //assuming FREE_FACTORS has largest value at the end
 	//THREADCOUNTS: for each entry a benchmark will be performed using this many threads
-	static final int[] THREADCOUNTS = {1,1,1,1,1,2,2,2,2,2};
+	static final int[] THREADCOUNTS = {
+			1,  1,  1,  1,  1,  1,  1,  1,
+			2,  2,  2,  2,  2,  2,  2,  2,
+			4,  4,  4,  4,  4,  4,  4,  4,
+			8,  8,  8,  8,  8,  8,  8,  8,
+			16, 16, 16, 16, 16, 16, 16, 16,
+			32, 32, 32, 32, 32, 32, 32, 32,
+			64, 64, 64, 64, 64, 64, 64, 64,
+			128,128,128,128,128,128,128,128
+	};
 
 	public enum MapType {
 		FASTSET,
 		CONCURRENT_HASHMAP,
 		NONBLOCKING_HASHMAP,
-		HASHTABLE,
-		LOCKLESS_HASHTABLE
+		HASHTABLE
 	};
 
 	public static void main(String[] args) throws InterruptedException {
@@ -49,11 +57,10 @@ public class Main {
 		try {
 			for (int freeFactor : FREE_FACTORS) {
 				System.out.println("Starting benchmarks with FREE_FACTOR: " + freeFactor);
-//				results.add(performBenchmark(MapType.LOCKLESS_HASHTABLE, freeFactor));
-//				results.add(performBenchmark(MapType.CONCURRENT_HASHMAP, freeFactor));
+				results.add(performBenchmark(MapType.CONCURRENT_HASHMAP, freeFactor));
 				results.add(performBenchmark(MapType.FASTSET, freeFactor));
-//				results.add(performBenchmark(MapType.HASHTABLE, freeFactor));
-//				results.add(performBenchmark(MapType.NONBLOCKING_HASHMAP, freeFactor));
+				results.add(performBenchmark(MapType.HASHTABLE, freeFactor));
+				results.add(performBenchmark(MapType.NONBLOCKING_HASHMAP, freeFactor));
 			}
 		}catch(Exception e) {
 			e.printStackTrace();
@@ -109,9 +116,6 @@ public class Main {
 				case NONBLOCKING_HASHMAP:
 					s = new HashtableWrapper<String>(new NonBlockingHashMap<String, String>(STATESPACE_SIZE * FREE_FACTOR));
 					break;
-				case LOCKLESS_HASHTABLE:
-//					s = new HashtableWrapper<String>(new nl.utwente.csc.fmt.locklesshashtable.spehashtable.Hashtable(STATESPACE_SIZE * FREE_FACTOR));
-//					break;
 				default:
 					throw new IllegalArgumentException("No such map type");
 			}
