@@ -621,3 +621,70 @@ type=FastSet run#=4 threads=2 time=1.1290 statespace=8388608 freefactor=2 insert
 type=FastSet run#=5 threads=2 time=0.9380 statespace=8388608 freefactor=2 inserted=8388608 speedup=1.675 date=13:07 2016-06-07 host=wiTu overlap=2.0
 type=FastSet run#=6 threads=2 time=0.9070 statespace=8388608 freefactor=2 inserted=8388608 speedup=1.732 date=13:07 2016-06-07 host=wiTu overlap=2.0
 type=FastSet run#=7 threads=2 time=0.9190 statespace=8388608 freefactor=2 inserted=8388608 speedup=1.709 date=13:07 2016-06-07 host=wiTu overlap=2.0
+
+
+==NON Generics: (Strings only)
+type=FastSet run#=0 threads=1 time=0.3940 statespace=2097152 freefactor=2 inserted=2097152 speedup=0.911 date=09:57 2016-06-08 host=wiTu overlap=2.0
+type=FastSet run#=1 threads=1 time=0.3280 statespace=2097152 freefactor=2 inserted=2097152 speedup=1.095 date=09:57 2016-06-08 host=wiTu overlap=2.0
+type=FastSet run#=2 threads=1 time=0.3660 statespace=2097152 freefactor=2 inserted=2097152 speedup=0.981 date=09:57 2016-06-08 host=wiTu overlap=2.0
+type=FastSet run#=3 threads=1 time=0.3770 statespace=2097152 freefactor=2 inserted=2097152 speedup=0.952 date=09:57 2016-06-08 host=wiTu overlap=2.0
+type=FastSet run#=4 threads=1 time=0.3590 statespace=2097152 freefactor=2 inserted=2097152 speedup=1.000 date=09:57 2016-06-08 host=wiTu overlap=2.0
+type=FastSet run#=5 threads=2 time=0.3520 statespace=2097152 freefactor=2 inserted=2097152 speedup=1.020 date=09:57 2016-06-08 host=wiTu overlap=2.0
+type=FastSet run#=6 threads=2 time=0.3830 statespace=2097152 freefactor=2 inserted=2097152 speedup=0.937 date=09:57 2016-06-08 host=wiTu overlap=2.0
+type=FastSet run#=7 threads=2 time=0.2960 statespace=2097152 freefactor=2 inserted=2097152 speedup=1.213 date=09:57 2016-06-08 host=wiTu overlap=2.0
+type=FastSet run#=8 threads=2 time=0.2090 statespace=2097152 freefactor=2 inserted=2097152 speedup=1.718 date=09:57 2016-06-08 host=wiTu overlap=2.0
+type=FastSet run#=9 threads=2 time=0.2050 statespace=2097152 freefactor=2 inserted=2097152 speedup=1.751 date=09:57 2016-06-08 host=wiTu overlap=2.0
+type=FastSet run#=0 threads=1 time=0.4430 statespace=2097152 freefactor=4 inserted=2097152 speedup=0.749 date=09:57 2016-06-08 host=wiTu overlap=2.0
+type=FastSet run#=1 threads=1 time=0.3260 statespace=2097152 freefactor=4 inserted=2097152 speedup=1.018 date=09:57 2016-06-08 host=wiTu overlap=2.0
+type=FastSet run#=2 threads=1 time=0.3960 statespace=2097152 freefactor=4 inserted=2097152 speedup=0.838 date=09:57 2016-06-08 host=wiTu overlap=2.0
+type=FastSet run#=3 threads=1 time=0.3470 statespace=2097152 freefactor=4 inserted=2097152 speedup=0.957 date=09:57 2016-06-08 host=wiTu overlap=2.0
+type=FastSet run#=4 threads=1 time=0.3320 statespace=2097152 freefactor=4 inserted=2097152 speedup=1.000 date=09:57 2016-06-08 host=wiTu overlap=2.0
+type=FastSet run#=5 threads=2 time=0.2040 statespace=2097152 freefactor=4 inserted=2097152 speedup=1.627 date=09:57 2016-06-08 host=wiTu overlap=2.0
+type=FastSet run#=6 threads=2 time=0.1750 statespace=2097152 freefactor=4 inserted=2097152 speedup=1.897 date=09:57 2016-06-08 host=wiTu overlap=2.0
+type=FastSet run#=7 threads=2 time=0.2050 statespace=2097152 freefactor=4 inserted=2097152 speedup=1.620 date=09:57 2016-06-08 host=wiTu overlap=2.0
+type=FastSet run#=8 threads=2 time=0.2080 statespace=2097152 freefactor=4 inserted=2097152 speedup=1.596 date=09:57 2016-06-08 host=wiTu overlap=2.0
+type=FastSet run#=9 threads=2 time=0.2040 statespace=2097152 freefactor=4 inserted=2097152 speedup=1.627 date=09:57 2016-06-08 host=wiTu overlap=2.0
+
+====== Now with Generics:
+type=FastSet run#=0 threads=1 time=0.4630 statespace=2097152 freefactor=2 inserted=2097152 speedup=0.780 date=10:57 2016-06-08 host=wiTu overlap=2.0
+type=FastSet run#=1 threads=1 time=0.3910 statespace=2097152 freefactor=2 inserted=2097152 speedup=0.923 date=10:57 2016-06-08 host=wiTu overlap=2.0
+type=FastSet run#=2 threads=1 time=0.3860 statespace=2097152 freefactor=2 inserted=2097152 speedup=0.935 date=10:57 2016-06-08 host=wiTu overlap=2.0
+type=FastSet run#=3 threads=1 time=0.3760 statespace=2097152 freefactor=2 inserted=2097152 speedup=0.960 date=10:57 2016-06-08 host=wiTu overlap=2.0
+type=FastSet run#=4 threads=1 time=0.3610 statespace=2097152 freefactor=2 inserted=2097152 speedup=1.000 date=10:57 2016-06-08 host=wiTu overlap=2.0
+type=FastSet run#=5 threads=2 time=0.2300 statespace=2097152 freefactor=2 inserted=2097152 speedup=1.570 date=10:57 2016-06-08 host=wiTu overlap=2.0
+type=FastSet run#=6 threads=2 time=0.2380 statespace=2097152 freefactor=2 inserted=2097152 speedup=1.517 date=10:57 2016-06-08 host=wiTu overlap=2.0
+type=FastSet run#=7 threads=2 time=0.2400 statespace=2097152 freefactor=2 inserted=2097152 speedup=1.504 date=10:57 2016-06-08 host=wiTu overlap=2.0
+type=FastSet run#=8 threads=2 time=0.2390 statespace=2097152 freefactor=2 inserted=2097152 speedup=1.510 date=10:57 2016-06-08 host=wiTu overlap=2.0
+type=FastSet run#=9 threads=2 time=0.3110 statespace=2097152 freefactor=2 inserted=2097152 speedup=1.161 date=10:57 2016-06-08 host=wiTu overlap=2.0
+type=FastSet run#=0 threads=1 time=0.4370 statespace=2097152 freefactor=4 inserted=2097152 speedup=0.867 date=10:57 2016-06-08 host=wiTu overlap=2.0
+type=FastSet run#=1 threads=1 time=0.3770 statespace=2097152 freefactor=4 inserted=2097152 speedup=1.005 date=10:57 2016-06-08 host=wiTu overlap=2.0
+type=FastSet run#=2 threads=1 time=0.3790 statespace=2097152 freefactor=4 inserted=2097152 speedup=1.000 date=10:57 2016-06-08 host=wiTu overlap=2.0
+type=FastSet run#=3 threads=1 time=0.3900 statespace=2097152 freefactor=4 inserted=2097152 speedup=0.972 date=10:57 2016-06-08 host=wiTu overlap=2.0
+type=FastSet run#=4 threads=1 time=0.3790 statespace=2097152 freefactor=4 inserted=2097152 speedup=1.000 date=10:57 2016-06-08 host=wiTu overlap=2.0
+type=FastSet run#=5 threads=2 time=0.2980 statespace=2097152 freefactor=4 inserted=2097152 speedup=1.272 date=10:57 2016-06-08 host=wiTu overlap=2.0
+type=FastSet run#=6 threads=2 time=0.2390 statespace=2097152 freefactor=4 inserted=2097152 speedup=1.586 date=10:57 2016-06-08 host=wiTu overlap=2.0
+type=FastSet run#=7 threads=2 time=0.2320 statespace=2097152 freefactor=4 inserted=2097152 speedup=1.634 date=10:57 2016-06-08 host=wiTu overlap=2.0
+type=FastSet run#=8 threads=2 time=0.3130 statespace=2097152 freefactor=4 inserted=2097152 speedup=1.211 date=10:57 2016-06-08 host=wiTu overlap=2.0
+type=FastSet run#=9 threads=2 time=0.3270 statespace=2097152 freefactor=4 inserted=2097152 speedup=1.159 date=10:57 2016-06-08 host=wiTu overlap=2.0
+
+=== more generics (Newer implementation)
+type=FastSet run#=0 threads=1 time=0.4210 statespace=2097152 freefactor=2 inserted=2097152 speedup=0.812 date=12:03 2016-06-08 host=wiTu overlap=2.0
+type=FastSet run#=1 threads=1 time=0.3450 statespace=2097152 freefactor=2 inserted=2097152 speedup=0.991 date=12:03 2016-06-08 host=wiTu overlap=2.0
+type=FastSet run#=2 threads=1 time=0.3350 statespace=2097152 freefactor=2 inserted=2097152 speedup=1.021 date=12:03 2016-06-08 host=wiTu overlap=2.0
+type=FastSet run#=3 threads=1 time=0.3340 statespace=2097152 freefactor=2 inserted=2097152 speedup=1.024 date=12:03 2016-06-08 host=wiTu overlap=2.0
+type=FastSet run#=4 threads=1 time=0.3420 statespace=2097152 freefactor=2 inserted=2097152 speedup=1.000 date=12:03 2016-06-08 host=wiTu overlap=2.0
+type=FastSet run#=5 threads=2 time=0.2280 statespace=2097152 freefactor=2 inserted=2097152 speedup=1.500 date=12:03 2016-06-08 host=wiTu overlap=2.0
+type=FastSet run#=6 threads=2 time=0.2210 statespace=2097152 freefactor=2 inserted=2097152 speedup=1.548 date=12:03 2016-06-08 host=wiTu overlap=2.0
+type=FastSet run#=7 threads=2 time=0.2230 statespace=2097152 freefactor=2 inserted=2097152 speedup=1.534 date=12:03 2016-06-08 host=wiTu overlap=2.0
+type=FastSet run#=8 threads=2 time=0.2960 statespace=2097152 freefactor=2 inserted=2097152 speedup=1.155 date=12:03 2016-06-08 host=wiTu overlap=2.0
+type=FastSet run#=9 threads=2 time=0.2900 statespace=2097152 freefactor=2 inserted=2097152 speedup=1.179 date=12:03 2016-06-08 host=wiTu overlap=2.0
+type=FastSet run#=0 threads=1 time=0.3810 statespace=2097152 freefactor=4 inserted=2097152 speedup=0.850 date=12:03 2016-06-08 host=wiTu overlap=2.0
+type=FastSet run#=1 threads=1 time=0.3310 statespace=2097152 freefactor=4 inserted=2097152 speedup=0.979 date=12:03 2016-06-08 host=wiTu overlap=2.0
+type=FastSet run#=2 threads=1 time=0.3240 statespace=2097152 freefactor=4 inserted=2097152 speedup=1.000 date=12:03 2016-06-08 host=wiTu overlap=2.0
+type=FastSet run#=3 threads=1 time=0.3310 statespace=2097152 freefactor=4 inserted=2097152 speedup=0.979 date=12:03 2016-06-08 host=wiTu overlap=2.0
+type=FastSet run#=4 threads=1 time=0.3240 statespace=2097152 freefactor=4 inserted=2097152 speedup=1.000 date=12:03 2016-06-08 host=wiTu overlap=2.0
+type=FastSet run#=5 threads=2 time=0.2080 statespace=2097152 freefactor=4 inserted=2097152 speedup=1.558 date=12:03 2016-06-08 host=wiTu overlap=2.0
+type=FastSet run#=6 threads=2 time=0.2900 statespace=2097152 freefactor=4 inserted=2097152 speedup=1.117 date=12:03 2016-06-08 host=wiTu overlap=2.0
+type=FastSet run#=7 threads=2 time=0.1950 statespace=2097152 freefactor=4 inserted=2097152 speedup=1.662 date=12:03 2016-06-08 host=wiTu overlap=2.0
+type=FastSet run#=8 threads=2 time=0.2120 statespace=2097152 freefactor=4 inserted=2097152 speedup=1.528 date=12:03 2016-06-08 host=wiTu overlap=2.0
+type=FastSet run#=9 threads=2 time=0.1940 statespace=2097152 freefactor=4 inserted=2097152 speedup=1.670 date=12:03 2016-06-08 host=wiTu overlap=2.0

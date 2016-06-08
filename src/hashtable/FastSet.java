@@ -6,9 +6,9 @@ import java.lang.reflect.Field;
 
 import static other.Logger.*;
 
-public class FastSet implements AbstractFastSet{
+public class FastSet<V> implements AbstractFastSet<V>{
 
-	public final Vector[] data;
+	public final V[] data;
 	public final int size;
 	private final int sizeMask;
 	private final long indicesBase;
@@ -23,7 +23,7 @@ public class FastSet implements AbstractFastSet{
 	private final Unsafe unsafe;
 
 
-	public FastSet(int init_size) {
+	public FastSet(int init_size, Class<V> type) {
 		this.size = init_size;
 		this.sizeMask = this.size - 1;
 
@@ -33,45 +33,41 @@ public class FastSet implements AbstractFastSet{
 			throw new IllegalArgumentException("size must be a power of two.");
 		}
 
-		this.data = new Vector[this.size];
+		this.data = (V[]) new Object[this.size]; //Compiler doesn't know what V represents, so cannot create V[] directly
 
 		Unsafe defUnsafe;
 		try {
 			Field f = Unsafe.class.getDeclaredField("theUnsafe");
 			f.setAccessible(true);
 			defUnsafe = (Unsafe) f.get(null);
-		} catch (NoSuchFieldException e) {
+
+			this.unsafe = defUnsafe;
+			if (this.unsafe == null) {
+				throw new NullPointerException("\"Unsafe\" isn't initialized");
+			}
+
+			indicesBase = unsafe.allocateMemory(this.size * KEY_SIZE_BYTES);
+			this.clear(type);
+		} catch (NoSuchFieldException | InstantiationException| IllegalAccessException e ) {
 			defUnsafe = null;
 			e.printStackTrace();
-		} catch (IllegalAccessException e) {
-			defUnsafe = null;
-			e.printStackTrace();
+			throw new NullPointerException("FastSet couldn't be initialized");
 		}
-		this.unsafe = defUnsafe;
-
-		if (this.unsafe == null) {
-			throw new NullPointerException("\"Unsafe\" isn't initialized");
-		}
-
-		indicesBase = unsafe.allocateMemory(this.size * KEY_SIZE_BYTES);
-		this.clear();
 	}
 
-	public void clear() {
+	public void clear(Class<V> type) throws IllegalAccessException, InstantiationException {
 		if(cleaned_up){
 			throw new RuntimeException("FastSet was already freed");
 		}
 		this.unsafe.setMemory(indicesBase, this.size * LONG_SIZE_BYTES, (byte) 0);
 		for (int i = 0; i < data.length; i++) { //slow, but effective
-			data[i] = new Vector();
+			data[i] = (V)type.newInstance();
 		}
 //        Arrays.fill(data, null);
 	}
 
-	public static int stringHash(String s, int iteration) {
+	public static final int rehashInt(int h, int iteration) {
 		// TODO: better hash function
-		int h = s.hashCode();
-
 		// See https://github.com/boundary/high-scale-lib/blob/master/src/main/java/org/cliffc/high_scale_lib/NonBlockingHashMap.java
         h += (h <<  15) ^ 0xffffcd7d;
         h*=iteration;//mine
@@ -118,14 +114,14 @@ public class FastSet implements AbstractFastSet{
 	 * @Return true if v was found. false if v was not found, but it was inserted
 	 */
 	@Override
-	public boolean findOrPut(Vector v) {
+	public boolean findOrPut(V v){
 		if(cleaned_up){
 			throw new RuntimeException("FastSet was already freed");
 		}
 		final int THRESHOLD = 1000; //How many times to rehash before giving up
 		final int CACHE_LINE_SIZE = 8;
 		int count = 1;
-		int h = stringHash(v.value, count);
+		int h = rehashInt(v.hashCode(), count);
 		final int originalHash = h; //Will be stored in the bucket (indices buffer)
 		int lineStart = h & this.sizeMask;   //Where to start probing
 
@@ -163,10 +159,9 @@ public class FastSet implements AbstractFastSet{
 					}
 				}
 			}
-
 			count++;
 			if(!NO_LOGGING){logV("rehashing #" + count);}
-			lineStart = stringHash(v.value, count) & this.sizeMask;
+			lineStart = rehashInt(originalHash, count) & this.sizeMask;
 		}
 
 		logE(String.format("Unable to insert \"%s\" (Threshold exceeded)", v.toString()));
@@ -174,7 +169,7 @@ public class FastSet implements AbstractFastSet{
 	}
 
 	@Override
-	public Vector[] getData() {
+	public V[] getData() {
 		return data;
 	}
 
