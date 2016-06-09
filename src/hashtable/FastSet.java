@@ -122,7 +122,7 @@ public class FastSet<V> implements AbstractFastSet<V>{
 		if(cleaned_up){
 			throw new RuntimeException("FastSet was already freed");
 		}
-		final int THRESHOLD = 1000; //How many times to rehash before giving up
+		final int THRESHOLD = 10000; //How many times to rehash before giving up
 		final int CACHE_LINE_SIZE = 8;
 		int count = 1;
 		int h = rehashInt(v.hashCode(), count);

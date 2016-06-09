@@ -1,5 +1,7 @@
 package hashtable;
 
+import org.cliffc.high_scale_lib.NonBlockingHashMap;
+
 import java.util.Map;
 
 /**

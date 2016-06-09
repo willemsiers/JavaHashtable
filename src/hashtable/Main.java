@@ -40,6 +40,7 @@ public class Main {
 
 	public static void main(String[] args) throws InterruptedException {
 		printMemoryMax();
+		printCPUCount();
 		BenchmarkResult.system = getHostname();
 		final ArrayList<BenchmarkResult[]> results = new ArrayList<BenchmarkResult[]>();
 
@@ -140,11 +141,11 @@ public class Main {
 						@Override
 						public void run() {
 							try {
+								System.out.printf("starting thread-%s, worksize %d\n", Thread.currentThread().getName(), workSize);
 								barrier.await(360, TimeUnit.SECONDS);
 							} catch (InterruptedException | BrokenBarrierException | TimeoutException e) {
 								e.printStackTrace();
 							}
-							logV(String.format("starting thread-%s with worksize %d", Thread.currentThread().getName(), workSize));
 
 							for (int i = 0; i < workSize; i++) {
 //								int workIt = fib(10);
@@ -179,7 +180,7 @@ public class Main {
 					e1.printStackTrace();
 				}
 
-				long startMs = System.currentTimeMillis();
+				final long startMs = System.currentTimeMillis();
 
 				for (Thread thread : threads) {
 					try {
@@ -189,9 +190,9 @@ public class Main {
 					}
 				}
 
-				long endMs = System.currentTimeMillis();
-				long diffMs = endMs - startMs;
-				double diffSeconds = diffMs / 1000f;
+				final long endMs = System.currentTimeMillis();
+				final long diffMs = endMs - startMs;
+				final double diffSeconds = diffMs / 1000f;
 
 				int insertedCounter = 0;
 				List<String> vectors = Arrays.<String>asList(s.getData());
@@ -268,6 +269,12 @@ public class Main {
 	{
 		Runtime rt = Runtime.getRuntime();
 		System.out.printf("Max memory: %d MB\n",rt.maxMemory() / (1024*1024));
+	}
+
+	public static void printCPUCount()
+	{
+		Runtime rt = Runtime.getRuntime();
+		System.out.printf("Num of CPU's: %d (\n", rt.availableProcessors());
 	}
 
 	private static int take(String[] src, final int startIndex, int n, String[] dst){
