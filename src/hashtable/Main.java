@@ -30,6 +30,7 @@ public class Main {
 			64, 64, 64, 64, 64, 64, 64, 64,
 			128,128,128,128,128,128,128,128
 	};
+	private static final long MAX_JOIN_TIME = 480*1000;
 
 	public enum MapType {
 		FASTSET,
@@ -148,12 +149,9 @@ public class Main {
 							}
 
 							for (int i = 0; i < workSize; i++) {
-//								int workIt = fib(10);
 								boolean found = s.findOrPut(unprocessed[i]); // if false, data is put
-//									if (!Logger.NO_LOGGING) {
-//										logV("found:" + found + " for " + unprocessed[i].toString());
-//									}
 							}
+
 						}
 					}
 
@@ -169,6 +167,7 @@ public class Main {
 				}
 
 				for (Thread worker : threads) {
+					worker.setPriority(Thread.MAX_PRIORITY);
 					worker.start();
 				}
 
@@ -182,11 +181,24 @@ public class Main {
 
 				final long startMs = System.currentTimeMillis();
 
+				boolean timeoutWasExceeded = false;
 				for (Thread thread : threads) {
-					try {
-						thread.join();
-					} catch (InterruptedException e) {
-						e.printStackTrace();
+					if(timeoutWasExceeded) {
+						thread.interrupt();
+						System.out.println("Interrupted "+thread);
+					}else
+					{
+						try {
+							thread.join(MAX_JOIN_TIME);
+							if (thread.isAlive()) {
+								System.out.println("Timeout exceeded: Killing all remaining threads.");
+								timeoutWasExceeded = true;
+								thread.interrupt();
+								System.out.println("Interrupted "+thread);
+							}
+						} catch (InterruptedException e) {
+							e.printStackTrace();
+						}
 					}
 				}
 
@@ -212,7 +224,7 @@ public class Main {
 				}
 
 //				printMemoryStatistics();
-				benchmarkResults[run] = new BenchmarkResult(run, STATESPACE_SIZE, diffSeconds, NUM_OF_THREADS, insertedCounter,STATESPACE_OVERLAP);
+				benchmarkResults[run] = new BenchmarkResult(run, STATESPACE_SIZE, diffSeconds, NUM_OF_THREADS, insertedCounter,STATESPACE_OVERLAP,timeoutWasExceeded);
 				benchmarkResults[run].mapImplementation = s.toString();
 				benchmarkResults[run].freeFactor = FREE_FACTOR;
 				if (insertedCounter != STATESPACE_SIZE) {
@@ -229,14 +241,6 @@ public class Main {
 		}
 
 		return benchmarkResults;
-	}
-
-	private static int fib(int n){
-		if(n == 1 || n == 2){
-			return 1;
-		}else {
-			return fib(n - 1) + fib(n - 2);
-		}
 	}
 
 	public static String getHostname() {
