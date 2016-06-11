@@ -13,15 +13,17 @@ public class BenchmarkResult {
 	public final int num_of_threads;
 	public final int insertedCounter;
 	public final float overlap;
+	private final boolean timeoutWasExceeded;
 	public double speedup;
 
-	public BenchmarkResult(int run, int statespace_size, double diffSeconds, int num_of_threads, int insertedCounter, float overlap) {
+	public BenchmarkResult(int run, int statespace_size, double diffSeconds, int num_of_threads, int insertedCounter, float overlap, boolean timeoutWasExceeded) {
 		this.run = run;
 		this.statespace_size = statespace_size;
 		this.diffSeconds = diffSeconds;
 		this.num_of_threads = num_of_threads;
 		this.insertedCounter = insertedCounter;
 		this.overlap = overlap;
+		this.timeoutWasExceeded = timeoutWasExceeded;
 	}
 
 	@Override
@@ -38,8 +40,9 @@ public class BenchmarkResult {
 				" speedup=%.3f" +
 				" date=%s" +
 				" host=%s" +
-				" overlap=%.1f",
+				" overlap=%.1f"+
+				" timedOut=%b",
 				mapImplementation, run, num_of_threads, diffSeconds, statespace_size,
-				freeFactor,insertedCounter, speedup, dateString, system, overlap);
+				freeFactor,insertedCounter, speedup, dateString, system, overlap, timeoutWasExceeded);
 	}
 }

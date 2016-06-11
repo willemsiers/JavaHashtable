@@ -131,7 +131,7 @@ public class FastSet<V> implements AbstractFastSet<V>{
 
 		boolean found = false;
 		while (count < THRESHOLD) {
-			for (int i = lineStart; i < lineStart + CACHE_LINE_SIZE; i++) {
+			for (int i = lineStart; i < lineStart + CACHE_LINE_SIZE; i++) { //TODO: can (lineStart + CACHE_LINE_SIZE) overflowing cause problems?!!!
 				int bucketOffsetLongs = i & this.sizeMask;
 				int bucketOffsetBytes = bucketOffsetLongs * LONG_SIZE_BYTES;
 				long bucketValue = unsafe.getLong(indicesBase + bucketOffsetBytes); //TODO: Maybe 'getLong' inside methods instead of passing "old" value around
